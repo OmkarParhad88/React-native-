@@ -2,6 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import * as Print from 'expo-print';
 import { useRouter } from "expo-router";
 import { shareAsync } from 'expo-sharing';
+import React from 'react';
 import { Alert, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { useItems } from "../../Context/ItemsContext";
 
@@ -50,14 +51,21 @@ export default function Index() {
     }
   };
 
-  const generateMonthPdf = async () => {
+  const [modalVisible, setModalVisible] = React.useState(false);
+  const { sellerSuggestions } = useItems();
+
+  const generateMonthPdf = async (sellerName?: string) => {
     const currentMonth = new Date().toISOString().slice(0, 7); // YYYY-MM
 
     // Filter items for current month (assuming item.date is YYYY-MM-DD)
-    const filteredItems = items.filter(item => item.date.startsWith(currentMonth));
+    let filteredItems = items.filter(item => item.date.startsWith(currentMonth));
+
+    if (sellerName) {
+      filteredItems = filteredItems.filter(item => item.seller === sellerName);
+    }
 
     if (filteredItems.length === 0) {
-      Alert.alert("No Data", "No items found for this month.");
+      Alert.alert("No Data", "No items found for this month" + (sellerName ? ` for ${sellerName}` : "") + ".");
       return;
     }
 
@@ -157,6 +165,7 @@ export default function Index() {
     try {
       const { uri } = await Print.printToFileAsync({ html });
       await shareAsync(uri, { UTI: '.pdf', mimeType: 'application/pdf' });
+      setModalVisible(false);
     } catch (error) {
       Alert.alert("Error", "Failed to generate or share PDF");
       console.error(error);
@@ -166,13 +175,13 @@ export default function Index() {
   return (
     <View className="flex-1  bg-blue-200">
 
-        <ScrollView className="flex-1 px-5 " showsVerticalScrollIndicator={false} contentContainerStyle={{
+      <ScrollView className="flex-1 px-5 " showsVerticalScrollIndicator={false} contentContainerStyle={{
         minHeight: "100%",
         paddingBottom: 10
-        }}>
+      }}>
         <View className="flex-row justify-between items-center mt-10 mb-5">
           <Text className="text-5xl text-primary font-bold">Welcome</Text>
-          <TouchableOpacity onPress={() => generateMonthPdf()} className="bg-blue-600 p-3 rounded-lg">
+          <TouchableOpacity onPress={() => setModalVisible(true)} className="bg-blue-600 p-3 rounded-lg">
             <Text className="text-white font-bold">Month Report</Text>
           </TouchableOpacity>
         </View>
@@ -200,7 +209,36 @@ export default function Index() {
           ))
         )}
 
-        </ScrollView>
+      </ScrollView>
+
+      {/* Seller Selection Modal */}
+      {modalVisible && (
+        <View className="absolute top-0 left-0 right-0 bottom-0 justify-center items-center bg-black/50 p-5">
+          <View className="bg-white rounded-2xl p-5 w-full max-w-sm">
+            <Text className="text-xl font-bold mb-4 text-center">Select Seller</Text>
+            <ScrollView className="max-h-60 mb-4">
+              {sellerSuggestions.map((seller, index) => (
+                <TouchableOpacity
+                  key={index}
+                  onPress={() => generateMonthPdf(seller)}
+                  className="p-3 border-b border-gray-100 active:bg-gray-50"
+                >
+                  <Text className="text-lg text-center">{seller}</Text>
+                </TouchableOpacity>
+              ))}
+              {sellerSuggestions.length === 0 && (
+                <Text className="text-center text-gray-500">No sellers found.</Text>
+              )}
+            </ScrollView>
+            <TouchableOpacity
+              onPress={() => setModalVisible(false)}
+              className="bg-gray-200 p-3 rounded-xl"
+            >
+              <Text className="text-center font-bold text-gray-700">Cancel</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      )}
 
     </View>
   );
