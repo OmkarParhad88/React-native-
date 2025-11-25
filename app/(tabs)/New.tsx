@@ -25,10 +25,22 @@ const New = () => {
     const { addItem, updateItem, sellerSuggestions, itemSuggestions } = useItems();
     const router = useRouter();
 
-    // Reset form when screen comes into focus (if not editing)
+    // Handle form state on focus (Reset or Populate)
     useFocusEffect(
         useCallback(() => {
-            if (!id) {
+            if (id) {
+                // Edit Mode: Populate form
+                setSeller(params.seller as string || "");
+                setItem(params.item as string || "");
+                if (params.date) setDate(new Date(params.date as string));
+                setDag(params.dag as string || "");
+                setQty(params.qty as string || "");
+                setPrice(params.price as string || "");
+                setSubtotal(params.subtotal as string || "");
+                setExpenseTotal(params.expenseTotal as string || "");
+                setTotal(params.total as string || "");
+            } else {
+            // New Mode: Reset form
                 setSeller("");
                 setItem("");
                 setDate(new Date());
@@ -39,23 +51,8 @@ const New = () => {
                 setExpenseTotal("");
                 setTotal("");
             }
-        }, [id])
+        }, [id, params])
     );
-
-    // Populate form if in edit mode
-    useEffect(() => {
-        if (id) {
-            setSeller(params.seller as string || "");
-            setItem(params.item as string || "");
-            if (params.date) setDate(new Date(params.date as string));
-            setDag(params.dag as string || "");
-            setQty(params.qty as string || "");
-            setPrice(params.price as string || "");
-            setSubtotal(params.subtotal as string || "");
-            setExpenseTotal(params.expenseTotal as string || "");
-            setTotal(params.total as string || "");
-        }
-    }, [id]);
 
     // Auto-calc subtotal
     useEffect(() => {

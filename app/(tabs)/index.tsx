@@ -34,20 +34,63 @@ export default function Index() {
       <html>
         <head>
           <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+          <style>
+            body { font-family: Helvetica, Arial, sans-serif; padding: 20px; }
+            .provider-header { margin-bottom: 20px; }
+            .provider-name { font-size: 24px; font-weight: bold; color: #2ecc71; margin-bottom: 5px; }
+            .provider-label { text-decoration: underline; }
+            .info-line { margin: 5px 0; font-size: 14px; }
+            .seller-section { margin-top: 30px; margin-bottom: 40px; page-break-inside: avoid; }
+            .seller-name { font-size: 20px; font-weight: bold; color: #3498db; margin-bottom: 10px; }
+            .seller-label { text-decoration: underline; }
+            table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+            th { background-color: #e67e22; color: white; padding: 8px; text-align: center; border: 1px solid #000; font-size: 12px; }
+            td { padding: 8px; text-align: center; border: 1px solid #000; background-color: #fce5cd; font-size: 12px; }
+            .total-row td { font-weight: bold; }
+            .total-label { text-align: left; padding-left: 10px; color: white; background-color: #e67e22; }
+            .wavy { text-decoration: underline; text-decoration-style: wavy; text-decoration-color: red; -webkit-text-decoration-color: red; }
+          </style>
         </head>
-        <body style="text-align: center; font-family: Helvetica Neue, Helvetica, Arial, sans-serif;">
-          <h1 style="font-size: 30px; margin-bottom: 20px;">Invoice</h1>
-          <div style="border: 1px solid #ddd; padding: 20px; margin: 20px; text-align: left; border-radius: 10px;">
-            <p><strong>Seller:</strong> ${item.seller}</p>
-            <p><strong>Date:</strong> ${formatDate(item.date)}</p>
-            <hr style="border-top: 1px solid #eee; margin: 10px 0;" />
-            <p><strong>Item:</strong> ${item.item}</p>
-            <p><strong>Quantity:</strong> ${item.qty}</p>
-            <p><strong>Price:</strong> ${item.price}</p>
-            <p><strong>Subtotal:</strong> ${item.subtotal}</p>
-            <p><strong>Expenses:</strong> ${item.expenseTotal}</p>
-            <hr style="border-top: 1px solid #eee; margin: 10px 0;" />
-            <h2 style="color: #4f46e5; text-align: right;">Total: ${item.total}</h2>
+        <body>
+          <div class="provider-header">
+            <div class="provider-name"><span class="provider-label">Provider :</span> Pravin <span class="wavy">Parhad</span></div>
+            <div class="info-line"><span style="text-decoration: underline;">Address :</span> kendur , parhadwadi</div>
+            <div class="info-line"><span style="text-decoration: underline;">Email :</span> pravinparhad6@gmail.com</div>
+            <div class="info-line"><span style="text-decoration: underline;">Phone :</span> 99303 58070</div>
+          </div>
+
+          <div class="seller-section">
+              <div class="seller-name"><span class="seller-label">Seller :</span> ${item.seller}</div>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Item</th>
+                    <th>Dag</th>
+                    <th>QTY</th>
+                    <th>Price per Unit</th>
+                    <th>Subtotal</th>
+                    <th>Expenses</th>
+                    <th>Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>${formatDate(item.date)}</td>
+                    <td>${item.item}</td>
+                    <td>${item.dag}</td>
+                    <td>${item.qty}</td>
+                    <td>${item.price}</td>
+                    <td>${item.subtotal}</td>
+                    <td>${item.expenseTotal}</td>
+                    <td>${item.total}</td>
+                  </tr>
+                  <tr class="total-row">
+                    <td colspan="7" class="total-label" style="text-align: left; text-decoration: underline;">Total :</td>
+                    <td>${item.total}</td>
+                  </tr>
+                </tbody>
+              </table>
           </div>
         </body>
       </html>
