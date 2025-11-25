@@ -1,10 +1,8 @@
 
-
-
-import {StyleSheet , Text, View} from 'react-native';
-import React from  "react";
-import {Tabs} from "expo-router";
-import {Ionicons} from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
+import { Tabs } from "expo-router";
+import React from "react";
+import { StyleSheet } from 'react-native';
 
 const _Layout = () => {
     return (
@@ -43,12 +41,12 @@ const _Layout = () => {
             }}
            />
            <Tabs.Screen
-            name = "Item"
+                name="Settings"
             options={{
-                title: "Items",
+                title: "Settings",
                 tabBarIcon: ({ color, size, focused }) => (
                     <Ionicons
-                        name={focused ? "cube" : "cube-outline"}
+                        name={focused ? "settings" : "settings-outline"}
                         size={size}
                         color={color}
                     />

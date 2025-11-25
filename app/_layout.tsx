@@ -1,19 +1,30 @@
 import { Stack } from "expo-router";
-import "./global.css"
+import { SafeAreaView } from "react-native-safe-area-context";
+import { ItemsProvider } from "../Context/ItemsContext";
+import "./global.css";
 
 export default function RootLayout() {
-  return <Stack>
- <Stack.Screen
-     name = "(tabs)"
-    options={{
-        headerShown: false,
-    }}
- /><Stack.Screen
-     name = "Item/[id]"
-    options={{
-        headerShown: false,
-    }}
- />
+    return (
+        <ItemsProvider>
+            <SafeAreaView style={{
+                flex: 1,
+                backgroundColor: "#000000",
+            }}>
+                <Stack>
+                    <Stack.Screen
+                        name="(tabs)"
+                        options={{
+                            headerShown: false,
+                        }}
+                    /><Stack.Screen
+                        name="Item/[id]"
+                        options={{
+                            headerShown: false,
+                        }}
+                    />
 
-  </Stack>;
-}
+                </Stack>
+            </SafeAreaView>
+        </ItemsProvider>
+    );
+}   
