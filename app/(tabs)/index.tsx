@@ -50,6 +50,119 @@ export default function Index() {
     }
   };
 
+  const generateMonthPdf = async () => {
+    const currentMonth = new Date().toISOString().slice(0, 7); // YYYY-MM
+
+    // Filter items for current month (assuming item.date is YYYY-MM-DD)
+    const filteredItems = items.filter(item => item.date.startsWith(currentMonth));
+
+    if (filteredItems.length === 0) {
+      Alert.alert("No Data", "No items found for this month.");
+      return;
+    }
+
+    // Group by seller
+    const itemsBySeller: { [key: string]: typeof items } = {};
+    filteredItems.forEach(item => {
+      if (!itemsBySeller[item.seller]) {
+        itemsBySeller[item.seller] = [];
+      }
+      itemsBySeller[item.seller].push(item);
+    });
+
+    let sellersHtml = '';
+
+    for (const seller in itemsBySeller) {
+      const sellerItems = itemsBySeller[seller];
+      let rowsHtml = '';
+      let grandTotal = 0;
+
+      sellerItems.forEach(item => {
+        rowsHtml += `
+          <tr>
+            <td>${item.date}</td>
+            <td>${item.item}</td>
+            <td>${item.dag}</td>
+            <td>${item.qty}</td>
+            <td>${item.price}</td>
+            <td>${item.subtotal}</td>
+            <td>${item.expenseTotal}</td>
+            <td>${item.total}</td>
+          </tr>
+        `;
+        grandTotal += parseFloat(item.total) || 0;
+      });
+
+      sellersHtml += `
+        <div class="seller-section">
+          <div class="seller-name"><span class="seller-label">Seller :</span> ${seller}</div>
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Item</th>
+                <th>Dag</th>
+                <th>QTY</th>
+                <th>Price per Unit</th>
+                <th>Subtotal</th>
+                <th>Expenses</th>
+                <th>Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rowsHtml}
+              <tr class="total-row">
+                <td colspan="7" class="total-label" style="text-align: left; text-decoration: underline;">Total :</td>
+                <td>${grandTotal.toFixed(2)}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    const html = `
+      <html>
+        <head>
+          <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+          <style>
+            body { font-family: Helvetica, Arial, sans-serif; padding: 20px; }
+            .provider-header { margin-bottom: 20px; }
+            .provider-name { font-size: 24px; font-weight: bold; color: #2ecc71; margin-bottom: 5px; }
+            .provider-label { text-decoration: underline; }
+            .info-line { margin: 5px 0; font-size: 14px; }
+            .seller-section { margin-top: 30px; margin-bottom: 40px; page-break-inside: avoid; }
+            .seller-name { font-size: 20px; font-weight: bold; color: #3498db; margin-bottom: 10px; }
+            .seller-label { text-decoration: underline; }
+            table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+            th { background-color: #e67e22; color: white; padding: 8px; text-align: center; border: 1px solid #000; font-size: 12px; }
+            td { padding: 8px; text-align: center; border: 1px solid #000; background-color: #fce5cd; font-size: 12px; }
+            .total-row td { font-weight: bold; }
+            .total-label { text-align: left; padding-left: 10px; color: white; background-color: #e67e22; }
+            .wavy { text-decoration: underline; text-decoration-style: wavy; text-decoration-color: red; -webkit-text-decoration-color: red; }
+          </style>
+        </head>
+        <body>
+          <div class="provider-header">
+            <div class="provider-name"><span class="provider-label">Provider :</span> Pravin <span class="wavy">Parhad</span></div>
+            <div class="info-line"><span style="text-decoration: underline;">Address :</span> kendur , parhadwadi</div>
+            <div class="info-line"><span style="text-decoration: underline;">Email :</span> pravinparhad6@gmail.com</div>
+            <div class="info-line"><span style="text-decoration: underline;">Phone :</span> 99303 58070</div>
+          </div>
+          ${sellersHtml}
+        </body>
+      </html>
+    `;
+
+    try {
+      const { uri } = await Print.printToFileAsync({ html });
+      await shareAsync(uri, { UTI: '.pdf', mimeType: 'application/pdf' });
+    } catch (error) {
+      Alert.alert("Error", "Failed to generate or share PDF");
+      console.error(error);
+    }
+  };
+
   return (
     <View className="flex-1  bg-blue-200">
 
@@ -57,7 +170,12 @@ export default function Index() {
         minHeight: "100%",
         paddingBottom: 10
         }}>
-        <Text className="text-5xl text-primary font-bold mt-10 mb-5">Welcome</Text>
+        <View className="flex-row justify-between items-center mt-10 mb-5">
+          <Text className="text-5xl text-primary font-bold">Welcome</Text>
+          <TouchableOpacity onPress={() => generateMonthPdf()} className="bg-blue-600 p-3 rounded-lg">
+            <Text className="text-white font-bold">Month Report</Text>
+          </TouchableOpacity>
+        </View>
 
         {items.length === 0 ? (
           <Text className="text-gray-500 text-lg">No items found. Add one!</Text>
