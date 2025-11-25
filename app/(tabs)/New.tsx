@@ -1,8 +1,8 @@
 import { Ionicons } from "@expo/vector-icons";
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { useLocalSearchParams, useRouter } from "expo-router";
-import React, { useEffect, useState } from "react";
-import { KeyboardAvoidingView, Platform, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
+import React, { useCallback, useEffect, useState } from "react";
+import { Alert, KeyboardAvoidingView, Platform, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
 import AutocompleteInput from "../../Components/AutocompleteInput";
 import { useItems } from "../../Context/ItemsContext";
 
@@ -24,6 +24,23 @@ const New = () => {
 
     const { addItem, updateItem, sellerSuggestions, itemSuggestions } = useItems();
     const router = useRouter();
+
+    // Reset form when screen comes into focus (if not editing)
+    useFocusEffect(
+        useCallback(() => {
+            if (!id) {
+                setSeller("");
+                setItem("");
+                setDate(new Date());
+                setDag("");
+                setQty("");
+                setPrice("");
+                setSubtotal("");
+                setExpenseTotal("");
+                setTotal("");
+            }
+        }, [id])
+    );
 
     // Populate form if in edit mode
     useEffect(() => {
@@ -60,6 +77,11 @@ const New = () => {
     }, [subtotal, expenseTotal]);
 
     const handleSubmit = () => {
+        if (!seller || !item || !qty) {
+            Alert.alert("Missing Fields", "Please fill in Seller, Item, and Quantity.");
+            return;
+        }
+
         const itemData = {
             id: isEditMode ? (id as string) : Date.now().toString(),
             seller,
@@ -101,7 +123,7 @@ const New = () => {
 
                     {/* Seller Section - High z-index for dropdown */}
                     <View className="mb-5 z-50">
-                        <Text className="text-indigo-900 font-bold text-base ml-1 mb-2">Seller Name</Text>
+                        <Text className="text-indigo-900 font-bold text-base ml-1 mb-2">Seller Name <Text className="text-red-500">*</Text></Text>
                         <AutocompleteInput
                             data={sellerSuggestions}
                             value={seller}
@@ -113,7 +135,7 @@ const New = () => {
 
                     {/* Date Section */}
                     <View className="mb-5 -z-10">
-                        <Text className="text-indigo-900 font-bold text-base ml-1 mb-2">Date</Text>
+                        <Text className="text-indigo-900 font-bold text-base ml-1 mb-2">Date <Text className="text-red-500">*</Text></Text>
                         <TouchableOpacity
                             onPress={() => setShowDatePicker(true)}
                             className="bg-gray-50 border border-gray-200 rounded-2xl p-4 flex-row items-center justify-between"
@@ -138,7 +160,7 @@ const New = () => {
 
                     {/* Item Section - High z-index for dropdown */}
                     <View className="mb-5 z-40">
-                        <Text className="text-indigo-900 font-bold text-base ml-1 mb-2">Item</Text>
+                        <Text className="text-indigo-900 font-bold text-base ml-1 mb-2">Item <Text className="text-red-500">*</Text></Text>
                         <AutocompleteInput
                             data={itemSuggestions}
                             value={item}
@@ -161,7 +183,7 @@ const New = () => {
                             />
                         </View>
                         <View className="w-[48%]">
-                            <Text className="text-indigo-900 font-bold text-base ml-1 mb-2">Quantity</Text>
+                            <Text className="text-indigo-900 font-bold text-base ml-1 mb-2">Quantity <Text className="text-red-500">*</Text></Text>
                             <TextInput
                                 value={qty}
                                 onChangeText={setQty}

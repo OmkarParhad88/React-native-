@@ -1,15 +1,19 @@
 import { Ionicons } from "@expo/vector-icons";
+import DateTimePicker from '@react-native-community/datetimepicker';
 import * as Print from 'expo-print';
 import { useRouter } from "expo-router";
 import { shareAsync } from 'expo-sharing';
 import React from 'react';
-import { Alert, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { Alert, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { useItems } from "../../Context/ItemsContext";
 
 export default function Index() {
 
   const router = useRouter();
   const { items } = useItems();
+  const [searchQuery, setSearchQuery] = React.useState("");
+  const [reportDate, setReportDate] = React.useState(new Date());
+  const [showDatePicker, setShowDatePicker] = React.useState(false);
 
   const handleEdit = (item: any) => {
     router.push({
@@ -61,9 +65,9 @@ export default function Index() {
   const { sellerSuggestions } = useItems();
 
   const generateMonthPdf = async (sellerName?: string) => {
-    const currentMonth = new Date().toISOString().slice(0, 7); // YYYY-MM
+    const currentMonth = reportDate.toISOString().slice(0, 7); // YYYY-MM
 
-    // Filter items for current month (assuming item.date is YYYY-MM-DD)
+    // Filter items for selected month
     let filteredItems = items.filter(item => item.date.startsWith(currentMonth));
 
     if (sellerName) {
@@ -186,16 +190,40 @@ export default function Index() {
         paddingBottom: 10
       }}>
         <View className="flex-row justify-between items-center mt-10 mb-5">
-          <Text className="text-5xl text-primary font-bold">Welcome</Text>
+          <Text className="text-5xl text-indigo font-bold">Pravin Parhad</Text>
           <TouchableOpacity onPress={() => setModalVisible(true)} className="bg-blue-600 p-3 rounded-lg">
             <Text className="text-white font-bold">Month Report</Text>
           </TouchableOpacity>
         </View>
 
-        {items.length === 0 ? (
-          <Text className="text-gray-500 text-lg">No items found. Add one!</Text>
+        {/* Search Bar */}
+        <View className="bg-white p-3 rounded-xl mb-4 flex-row items-center shadow-sm">
+          <Ionicons name="search" size={20} color="gray" />
+          <TextInput
+            placeholder="Search seller or item..."
+            className="flex-1 ml-2 text-base"
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+          />
+          {searchQuery !== '' && (
+            <TouchableOpacity onPress={() => setSearchQuery('')}>
+              <Ionicons name="close-circle" size={20} color="gray" />
+            </TouchableOpacity>
+          )}
+        </View>
+
+        {items.filter(item =>
+          item.seller.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          item.item.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          item.date.includes(searchQuery)
+        ).length === 0 ? (
+          <Text className="text-gray-500 text-lg text-center mt-10">No items found.</Text>
         ) : (
-          items.map((item) => (
+            items.filter(item =>
+              item.seller.toLowerCase().includes(searchQuery.toLowerCase()) ||
+              item.item.toLowerCase().includes(searchQuery.toLowerCase()) ||
+              item.date.includes(searchQuery)
+            ).map((item) => (
             <TouchableOpacity key={item.id} onPress={() => handleEdit(item)} className="bg-white p-4 rounded-xl mb-3 shadow-sm">
               <View className="flex-row justify-between mb-2">
                 <Text className="font-bold text-lg">{item.seller}</Text>
@@ -221,8 +249,35 @@ export default function Index() {
       {modalVisible && (
         <View className="absolute top-0 left-0 right-0 bottom-0 justify-center items-center bg-black/50 p-5">
           <View className="bg-white rounded-2xl p-5 w-full max-w-sm">
-            <Text className="text-xl font-bold mb-4 text-center">Select Seller</Text>
-            <ScrollView className="max-h-60 mb-4">
+            <Text className="text-xl font-bold mb-4 text-center">Select Month & Seller</Text>
+
+            <View className="mb-4">
+              <Text className="text-gray-600 mb-2 font-semibold">Report Month</Text>
+              <TouchableOpacity
+                onPress={() => setShowDatePicker(true)}
+                className="bg-gray-100 p-3 rounded-xl flex-row justify-between items-center"
+              >
+                <Text className="text-lg">{reportDate.toISOString().slice(0, 7)}</Text>
+                <Ionicons name="calendar" size={20} color="#4f46e5" />
+              </TouchableOpacity>
+            </View>
+
+            {showDatePicker && (
+              <DateTimePicker
+                value={reportDate}
+                mode="date"
+                display="default"
+                onChange={(event, selectedDate) => {
+                  setShowDatePicker(false);
+                  if (selectedDate) {
+                    setReportDate(selectedDate);
+                  }
+                }}
+              />
+            )}
+
+            <Text className="text-gray-600 mb-2 font-semibold">Select Seller</Text>
+            <ScrollView className="max-h-40 mb-4">
               {sellerSuggestions.map((seller, index) => (
                 <TouchableOpacity
                   key={index}
