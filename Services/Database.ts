@@ -25,7 +25,7 @@ export const initDB = () => {
 };
 
 export const getItems = (): Item[] => {
-  const allRows = db.getAllSync('SELECT * FROM items');
+  const allRows = db.getAllSync('SELECT * FROM items ORDER BY id DESC');
   return allRows as Item[];
 };
 

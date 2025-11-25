@@ -37,26 +37,25 @@ export default function Index() {
           <style>
             body { font-family: Helvetica, Arial, sans-serif; padding: 20px; }
             .provider-header { margin-bottom: 20px; }
-            .provider-name { font-size: 24px; font-weight: bold; color: #2ecc71; margin-bottom: 5px; }
+            .provider-name { font-size: 24px; font-weight: bold; color: #ff0000ff; margin-bottom: 5px; }
             .provider-label { text-decoration: underline; }
             .info-line { margin: 5px 0; font-size: 14px; }
             .seller-section { margin-top: 30px; margin-bottom: 40px; page-break-inside: avoid; }
-            .seller-name { font-size: 20px; font-weight: bold; color: #3498db; margin-bottom: 10px; }
+            .seller-name { font-size: 20px; font-weight: bold; color: #0099ffff; margin-bottom: 10px; }
             .seller-label { text-decoration: underline; }
             table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-            th { background-color: #e67e22; color: white; padding: 8px; text-align: center; border: 1px solid #000; font-size: 12px; }
-            td { padding: 8px; text-align: center; border: 1px solid #000; background-color: #fce5cd; font-size: 12px; }
+            th { background-color: #22e650ff; color: white; padding: 8px; text-align: center; border: 1px solid #000; font-size: 12px; }
+            td { padding: 8px; text-align: center; border: 1px solid #000; background-color: #f0f0f0ff; font-size: 12px; }
             .total-row td { font-weight: bold; }
-            .total-label { text-align: left; padding-left: 10px; color: white; background-color: #e67e22; }
-            .wavy { text-decoration: underline; text-decoration-style: wavy; text-decoration-color: red; -webkit-text-decoration-color: red; }
+            .total-label { text-align: left; padding-left: 10px; color: white; background-color: #e6e6e6ff; }
           </style>
         </head>
         <body>
           <div class="provider-header">
-            <div class="provider-name"><span class="provider-label">Provider :</span> Pravin <span class="wavy">Parhad</span></div>
-            <div class="info-line"><span style="text-decoration: underline;">Address :</span> kendur , parhadwadi</div>
-            <div class="info-line"><span style="text-decoration: underline;">Email :</span> pravinparhad6@gmail.com</div>
-            <div class="info-line"><span style="text-decoration: underline;">Phone :</span> 99303 58070</div>
+            <div class="provider-name"><span class="provider-label">Provider :</span> Pravin <span>Parhad</span></div>
+            <div class="info-line"><span >Address :</span> kendur , parhadwadi</div>
+            <div class="info-line"><span >Email :</span> pravinparhad6@gmail.com</div>
+            <div class="info-line"><span >Phone :</span> 99303 58070</div>
           </div>
 
           <div class="seller-section">

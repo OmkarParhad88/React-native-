@@ -43,7 +43,7 @@ export const ItemsProvider = ({ children }: { children: ReactNode }) => {
 
   const addItem = (item: Item) => {
     insertItem(item);
-    setItems((prevItems) => [...prevItems, item]);
+    setItems((prevItems) => [item, ...prevItems]);
     refreshSuggestions();
   };
 

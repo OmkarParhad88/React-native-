@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
+import { useFocusEffect, useLocalSearchParams, useNavigation, useRouter } from "expo-router";
 import React, { useCallback, useEffect, useState } from "react";
 import { Alert, KeyboardAvoidingView, Platform, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
 import AutocompleteInput from "../../Components/AutocompleteInput";
@@ -24,6 +24,7 @@ const New = () => {
 
     const { addItem, updateItem, sellerSuggestions, itemSuggestions } = useItems();
     const router = useRouter();
+    const navigation = useNavigation();
 
     // Handle form state on focus (Reset or Populate)
     useFocusEffect(
@@ -40,7 +41,7 @@ const New = () => {
                 setExpenseTotal(params.expenseTotal as string || "");
                 setTotal(params.total as string || "");
             } else {
-            // New Mode: Reset form
+                // New Mode: Reset form
                 setSeller("");
                 setItem("");
                 setDate(new Date());
@@ -53,6 +54,29 @@ const New = () => {
             }
         }, [id, params])
     );
+
+    // Clear params when navigating away (blur)
+    useEffect(() => {
+        const unsubscribe = navigation.addListener('blur', () => {
+            // Use setParams to clear the navigation state
+            // We use setTimeout to ensure this happens after the transition
+            setTimeout(() => {
+                navigation.setParams({
+                    id: undefined,
+                    seller: undefined,
+                    item: undefined,
+                    date: undefined,
+                    dag: undefined,
+                    qty: undefined,
+                    price: undefined,
+                    subtotal: undefined,
+                    expenseTotal: undefined,
+                    total: undefined
+                });
+            }, 100);
+        });
+        return unsubscribe;
+    }, [navigation]);
 
     // Auto-calc subtotal
     useEffect(() => {
