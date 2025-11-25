@@ -14,6 +14,7 @@ export default function Index() {
   const [searchQuery, setSearchQuery] = React.useState("");
   const [reportDate, setReportDate] = React.useState(new Date());
   const [showDatePicker, setShowDatePicker] = React.useState(false);
+  const [showSearchDatePicker, setShowSearchDatePicker] = React.useState(false);
 
   const handleEdit = (item: any) => {
     router.push({
@@ -200,7 +201,7 @@ export default function Index() {
         <View className="bg-white p-3 rounded-xl mb-4 flex-row items-center shadow-sm">
           <Ionicons name="search" size={20} color="gray" />
           <TextInput
-            placeholder="Search seller or item..."
+            placeholder="Search seller, item, or date..."
             className="flex-1 ml-2 text-base"
             value={searchQuery}
             onChangeText={setSearchQuery}
@@ -210,19 +211,39 @@ export default function Index() {
               <Ionicons name="close-circle" size={20} color="gray" />
             </TouchableOpacity>
           )}
+          <TouchableOpacity onPress={() => setShowSearchDatePicker(true)} className="ml-2">
+            <Ionicons name="calendar" size={24} color="#4f46e5" />
+          </TouchableOpacity>
         </View>
+
+        {showSearchDatePicker && (
+          <DateTimePicker
+            value={new Date()}
+            mode="date"
+            display="default"
+            onChange={(event, selectedDate) => {
+              setShowSearchDatePicker(false);
+              if (selectedDate) {
+                const formattedDate = formatDate(selectedDate.toISOString().split('T')[0]);
+                setSearchQuery(formattedDate);
+              }
+            }}
+          />
+        )}
 
         {items.filter(item =>
           item.seller.toLowerCase().includes(searchQuery.toLowerCase()) ||
           item.item.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          item.date.includes(searchQuery)
+          item.date.includes(searchQuery) ||
+          formatDate(item.date).includes(searchQuery)
         ).length === 0 ? (
           <Text className="text-gray-500 text-lg text-center mt-10">No items found.</Text>
         ) : (
             items.filter(item =>
               item.seller.toLowerCase().includes(searchQuery.toLowerCase()) ||
               item.item.toLowerCase().includes(searchQuery.toLowerCase()) ||
-              item.date.includes(searchQuery)
+              item.date.includes(searchQuery) ||
+              formatDate(item.date).includes(searchQuery)
             ).map((item) => (
             <TouchableOpacity key={item.id} onPress={() => handleEdit(item)} className="bg-white p-4 rounded-xl mb-3 shadow-sm">
               <View className="flex-row justify-between mb-2">
