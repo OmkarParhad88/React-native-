@@ -13,6 +13,7 @@ export default function Index() {
   const { items } = useItems();
   const [searchQuery, setSearchQuery] = React.useState("");
   const [reportDate, setReportDate] = React.useState(new Date());
+  const [reportExpense, setReportExpense] = React.useState("");
   const [showDatePicker, setShowDatePicker] = React.useState(false);
   const [showSearchDatePicker, setShowSearchDatePicker] = React.useState(false);
 
@@ -105,20 +106,21 @@ export default function Index() {
   };
 
   const [modalVisible, setModalVisible] = React.useState(false);
+  const [selectedSeller, setSelectedSeller] = React.useState<string | undefined>(undefined);
   const { sellerSuggestions } = useItems();
 
-  const generateMonthPdf = async (sellerName?: string) => {
+  const generateMonthPdf = async () => {
     const currentMonth = reportDate.toISOString().slice(0, 7); // YYYY-MM
 
     // Filter items for selected month
     let filteredItems = items.filter(item => item.date.startsWith(currentMonth));
 
-    if (sellerName) {
-      filteredItems = filteredItems.filter(item => item.seller === sellerName);
+    if (selectedSeller) {
+      filteredItems = filteredItems.filter(item => item.seller === selectedSeller);
     }
 
     if (filteredItems.length === 0) {
-      Alert.alert("No Data", "No items found for this month" + (sellerName ? ` for ${sellerName}` : "") + ".");
+      Alert.alert("No Data", "No items found for this month" + (selectedSeller ? ` for ${selectedSeller}` : "") + ".");
       return;
     }
 
@@ -132,6 +134,7 @@ export default function Index() {
     });
 
     let sellersHtml = '';
+    const expenseAmount = parseFloat(reportExpense) || 0;
 
     for (const seller in itemsBySeller) {
       const sellerItems = itemsBySeller[seller];
@@ -153,6 +156,8 @@ export default function Index() {
         `;
         grandTotal += parseFloat(item.total) || 0;
       });
+
+      const netTotal = grandTotal - expenseAmount;
 
       sellersHtml += `
         <div class="seller-section">
@@ -176,6 +181,16 @@ export default function Index() {
                 <td colspan="7" class="total-label" style="text-align: left; text-decoration: underline;">Total :</td>
                 <td>${grandTotal.toFixed(2)}</td>
               </tr>
+              ${expenseAmount > 0 ? `
+              <tr class="total-row">
+                <td colspan="7" class="total-label" style="text-align: left; text-decoration: underline;">Less: Additional Expense :</td>
+                <td>${expenseAmount.toFixed(2)}</td>
+              </tr>
+              <tr class="total-row">
+                <td colspan="7" class="total-label" style="text-align: left; text-decoration: underline;">Net Total :</td>
+                <td>${netTotal.toFixed(2)}</td>
+              </tr>
+              ` : ''}
             </tbody>
           </table>
         </div>
@@ -189,26 +204,25 @@ export default function Index() {
           <style>
             body { font-family: Helvetica, Arial, sans-serif; padding: 20px; }
             .provider-header { margin-bottom: 20px; }
-            .provider-name { font-size: 24px; font-weight: bold; color: #2ecc71; margin-bottom: 5px; }
+            .provider-name { font-size: 24px; font-weight: bold; color: #ff0000ff; margin-bottom: 5px; }
             .provider-label { text-decoration: underline; }
             .info-line { margin: 5px 0; font-size: 14px; }
             .seller-section { margin-top: 30px; margin-bottom: 40px; page-break-inside: avoid; }
-            .seller-name { font-size: 20px; font-weight: bold; color: #3498db; margin-bottom: 10px; }
+            .seller-name { font-size: 20px; font-weight: bold; color: #0099ffff; margin-bottom: 10px; }
             .seller-label { text-decoration: underline; }
             table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-            th { background-color: #e67e22; color: white; padding: 8px; text-align: center; border: 1px solid #000; font-size: 12px; }
-            td { padding: 8px; text-align: center; border: 1px solid #000; background-color: #fce5cd; font-size: 12px; }
+            th { background-color: #22e650ff; color: white; padding: 8px; text-align: center; border: 1px solid #000; font-size: 12px; }
+            td { padding: 8px; text-align: center; border: 1px solid #000; background-color: #f0f0f0ff; font-size: 12px; }
             .total-row td { font-weight: bold; }
             .total-label { text-align: left; padding-left: 10px; color: white; background-color: #e67e22; }
-            .wavy { text-decoration: underline; text-decoration-style: wavy; text-decoration-color: red; -webkit-text-decoration-color: red; }
           </style>
         </head>
         <body>
           <div class="provider-header">
-            <div class="provider-name"><span class="provider-label">Provider :</span> Pravin <span class="wavy">Parhad</span></div>
-            <div class="info-line"><span style="text-decoration: underline;">Address :</span> kendur , parhadwadi</div>
-            <div class="info-line"><span style="text-decoration: underline;">Email :</span> pravinparhad6@gmail.com</div>
-            <div class="info-line"><span style="text-decoration: underline;">Phone :</span> 99303 58070</div>
+            <div class="provider-name"><span class="provider-label">Provider :</span> Pravin <span>Parhad</span></div>
+            <div class="info-line"><span >Address :</span> kendur , parhadwadi</div>
+            <div class="info-line"><span >Email :</span> pravinparhad6@gmail.com</div>
+            <div class="info-line"><span >Phone :</span> 99303 58070</div>
           </div>
           ${sellersHtml}
         </body>
@@ -219,6 +233,8 @@ export default function Index() {
       const { uri } = await Print.printToFileAsync({ html });
       await shareAsync(uri, { UTI: '.pdf', mimeType: 'application/pdf' });
       setModalVisible(false);
+      setReportExpense(""); // Reset expense after generation
+      setSelectedSeller(undefined); // Reset selection
     } catch (error) {
       Alert.alert("Error", "Failed to generate or share PDF");
       console.error(error);
@@ -339,27 +355,53 @@ export default function Index() {
               />
             )}
 
-            <Text className="text-gray-600 mb-2 font-semibold">Select Seller</Text>
+            <View className="mb-4">
+              <Text className="text-gray-600 mb-2 font-semibold">Additional Expense</Text>
+              <TextInput
+                value={reportExpense}
+                onChangeText={setReportExpense}
+                keyboardType="numeric"
+                placeholder="0.00"
+                className="bg-gray-100 p-3 rounded-xl text-lg"
+              />
+            </View>
+
+            <Text className="text-gray-600 mb-2 font-semibold">Select Seller (Optional)</Text>
             <ScrollView className="max-h-40 mb-4">
+              <TouchableOpacity
+                onPress={() => setSelectedSeller(undefined)}
+                className={`p-3 border-b border-gray-100 ${selectedSeller === undefined ? 'bg-indigo-100' : 'active:bg-gray-50'}`}
+              >
+                <Text className={`text-lg text-center ${selectedSeller === undefined ? 'font-bold text-indigo-700' : ''}`}>All Sellers</Text>
+              </TouchableOpacity>
               {sellerSuggestions.map((seller, index) => (
                 <TouchableOpacity
                   key={index}
-                  onPress={() => generateMonthPdf(seller)}
-                  className="p-3 border-b border-gray-100 active:bg-gray-50"
+                  onPress={() => setSelectedSeller(seller)}
+                  className={`p-3 border-b border-gray-100 ${selectedSeller === seller ? 'bg-indigo-100' : 'active:bg-gray-50'}`}
                 >
-                  <Text className="text-lg text-center">{seller}</Text>
+                  <Text className={`text-lg text-center ${selectedSeller === seller ? 'font-bold text-indigo-700' : ''}`}>{seller}</Text>
                 </TouchableOpacity>
               ))}
               {sellerSuggestions.length === 0 && (
                 <Text className="text-center text-gray-500">No sellers found.</Text>
               )}
             </ScrollView>
-            <TouchableOpacity
-              onPress={() => setModalVisible(false)}
-              className="bg-gray-200 p-3 rounded-xl"
-            >
-              <Text className="text-center font-bold text-gray-700">Cancel</Text>
-            </TouchableOpacity>
+
+            <View className="flex-row justify-between">
+              <TouchableOpacity
+                onPress={() => setModalVisible(false)}
+                className="bg-gray-200 p-3 rounded-xl flex-1 mr-2"
+              >
+                <Text className="text-center font-bold text-gray-700">Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={generateMonthPdf}
+                className="bg-indigo-600 p-3 rounded-xl flex-1 ml-2"
+              >
+                <Text className="text-center font-bold text-white">Print Report</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       )}
