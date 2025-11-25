@@ -118,7 +118,7 @@ const New = () => {
                             onPress={() => setShowDatePicker(true)}
                             className="bg-gray-50 border border-gray-200 rounded-2xl p-4 flex-row items-center justify-between"
                         >
-                            <Text className="text-gray-800 text-base">{date.toISOString().split('T')[0]}</Text>
+                            <Text className="text-gray-800 text-base">{date.toISOString().split('T')[0].split('-').reverse().join('-')}</Text>
                             <Ionicons name="calendar-outline" size={20} color="#4f46e5" />
                         </TouchableOpacity>
                         {showDatePicker && (

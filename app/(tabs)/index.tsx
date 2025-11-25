@@ -18,6 +18,12 @@ export default function Index() {
     });
   };
 
+  const formatDate = (dateString: string) => {
+    if (!dateString) return "";
+    const [year, month, day] = dateString.split('-');
+    return `${day}-${month}-${year}`;
+  };
+
   const generatePdf = async (item: any) => {
     const html = `
       <html>
@@ -28,7 +34,7 @@ export default function Index() {
           <h1 style="font-size: 30px; margin-bottom: 20px;">Invoice</h1>
           <div style="border: 1px solid #ddd; padding: 20px; margin: 20px; text-align: left; border-radius: 10px;">
             <p><strong>Seller:</strong> ${item.seller}</p>
-            <p><strong>Date:</strong> ${item.date}</p>
+            <p><strong>Date:</strong> ${formatDate(item.date)}</p>
             <hr style="border-top: 1px solid #eee; margin: 10px 0;" />
             <p><strong>Item:</strong> ${item.item}</p>
             <p><strong>Quantity:</strong> ${item.qty}</p>
@@ -88,7 +94,7 @@ export default function Index() {
       sellerItems.forEach(item => {
         rowsHtml += `
           <tr>
-            <td>${item.date}</td>
+            <td>${formatDate(item.date)}</td>
             <td>${item.item}</td>
             <td>${item.dag}</td>
             <td>${item.qty}</td>
@@ -193,7 +199,7 @@ export default function Index() {
             <TouchableOpacity key={item.id} onPress={() => handleEdit(item)} className="bg-white p-4 rounded-xl mb-3 shadow-sm">
               <View className="flex-row justify-between mb-2">
                 <Text className="font-bold text-lg">{item.seller}</Text>
-                <Text className="text-gray-500">{item.date}</Text>
+                <Text className="text-gray-500">{formatDate(item.date)}</Text>
               </View>
               <Text className="text-gray-700">Item: {item.item}</Text>
               <View className="flex-row justify-between mt-2 items-center">
