@@ -49,6 +49,7 @@ export default function Index() {
             td { padding: 8px; text-align: center; border: 1px solid #000; background-color: #f0f0f0ff; font-size: 12px; }
             .total-row td { font-weight: bold; }
             .total-label { text-align: left; padding-left: 10px; color: white; background-color: #e6e6e6ff; }
+            td:last-child { color: red; font-weight: bold; }
           </style>
         </head>
         <body>

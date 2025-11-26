@@ -186,7 +186,7 @@ const New = () => {
                             data={itemSuggestions}
                             value={item}
                             onChangeText={setItem}
-                            placeholder="e.g. Apples"
+                            placeholder="e.g. Kamini"
                             className="bg-gray-50 border border-gray-200 rounded-2xl p-4 text-gray-800 text-base"
                         />
                     </View>
