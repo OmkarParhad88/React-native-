@@ -39,16 +39,16 @@ export default function Index() {
             body { font-family: Helvetica, Arial, sans-serif; padding: 20px; }
             .provider-header { margin-bottom: 20px; }
             .provider-name { font-size: 24px; font-weight: bold; color: #ff0000ff; margin-bottom: 5px; }
-            .provider-label { text-decoration: underline; }
+            .provider-label {  }
             .info-line { margin: 5px 0; font-size: 14px; }
             .seller-section { margin-top: 30px; margin-bottom: 40px; page-break-inside: avoid; }
             .seller-name { font-size: 20px; font-weight: bold; color: #0099ffff; margin-bottom: 10px; }
-            .seller-label { text-decoration: underline; }
+            .seller-label { }
             table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-            th { background-color: #22e650ff; color: white; padding: 8px; text-align: center; border: 1px solid #000; font-size: 12px; }
+            th { background-color: #22e650ff; color: black; padding: 8px; text-align: center; border: 1px solid #000; font-size: 12px; }
             td { padding: 8px; text-align: center; border: 1px solid #000; background-color: #f0f0f0ff; font-size: 12px; }
             .total-row td { font-weight: bold; }
-            .total-label { text-align: left; padding-left: 10px; color: white; background-color: #e6e6e6ff; }
+            .total-label { text-align: left; padding-left: 10px; color: black; background-color: #e6e6e6ff; }
             td:last-child { color: red; font-weight: bold; }
           </style>
         </head>
@@ -87,7 +87,7 @@ export default function Index() {
                     <td>${item.total}</td>
                   </tr>
                   <tr class="total-row">
-                    <td colspan="7" class="total-label" style="text-align: left; text-decoration: underline;">Total :</td>
+                    <td colspan="7" class="total-label" style="text-align: left;">Total :</td>
                     <td>${item.total}</td>
                   </tr>
                 </tbody>
@@ -179,16 +179,16 @@ export default function Index() {
             <tbody>
               ${rowsHtml}
               <tr class="total-row">
-                <td colspan="7" class="total-label" style="text-align: left; text-decoration: underline;">Total :</td>
+                <td colspan="7" class="total-label" style="text-align: left;">Total :</td>
                 <td>${grandTotal.toFixed(2)}</td>
               </tr>
               ${expenseAmount > 0 ? `
               <tr class="total-row">
-                <td colspan="7" class="total-label" style="text-align: left; text-decoration: underline;">Less: Additional Expense :</td>
+                <td colspan="7" class="total-label" style="text-align: left;">Less: Additional Expense :</td>
                 <td>${expenseAmount.toFixed(2)}</td>
               </tr>
               <tr class="total-row">
-                <td colspan="7" class="total-label" style="text-align: left; text-decoration: underline;">Net Total :</td>
+                <td colspan="7" class="total-label" style="text-align: left;">Net Total :</td>
                 <td>${netTotal.toFixed(2)}</td>
               </tr>
               ` : ''}
@@ -206,16 +206,16 @@ export default function Index() {
             body { font-family: Helvetica, Arial, sans-serif; padding: 20px; }
             .provider-header { margin-bottom: 20px; }
             .provider-name { font-size: 24px; font-weight: bold; color: #ff0000ff; margin-bottom: 5px; }
-            .provider-label { text-decoration: underline; }
+            .provider-label {  }
             .info-line { margin: 5px 0; font-size: 14px; }
             .seller-section { margin-top: 30px; margin-bottom: 40px; page-break-inside: avoid; }
             .seller-name { font-size: 20px; font-weight: bold; color: #0099ffff; margin-bottom: 10px; }
-            .seller-label { text-decoration: underline; }
+            .seller-label { }
             table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-            th { background-color: #22e650ff; color: white; padding: 8px; text-align: center; border: 1px solid #000; font-size: 12px; }
+            th { background-color: #22e650ff; color: black; padding: 8px; text-align: center; border: 1px solid #000; font-size: 12px; }
             td { padding: 8px; text-align: center; border: 1px solid #000; background-color: #f0f0f0ff; font-size: 12px; }
             .total-row td { font-weight: bold; }
-            .total-label { text-align: left; padding-left: 10px; color: white; background-color: #e67e22; }
+            .total-label { text-align: left; padding-left: 10px; color: black; background-color: #e67e22; }
           </style>
         </head>
         <body>
@@ -250,7 +250,7 @@ export default function Index() {
         paddingBottom: 10
       }}>
         <View className="flex-row justify-between items-center mt-10 mb-5">
-          <Text className="text-5xl text-indigo font-bold">Pravin Parhad</Text>
+          <Text className="text-5xl text-indigo-600 font-bold">Pravin Parhad</Text>
           <TouchableOpacity onPress={() => setModalVisible(true)} className="bg-blue-600 p-3 rounded-lg">
             <Text className="text-white font-bold">Month Report</Text>
           </TouchableOpacity>

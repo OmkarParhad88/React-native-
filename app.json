@@ -4,7 +4,7 @@
     "slug": "Pravin_Parhad",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/farming1.jpg",
+    "icon": "./assets/images/farming1.png",
     "scheme": "pravinparhad",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -12,25 +12,26 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "com.pravinparhad.farmingapp",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/images/farming1.jpg",
-        "backgroundImage": "./assets/images/farming1.jpg",
-        "monochromeImage": "./assets/images/farming1.jpg"
+        "foregroundImage": "./assets/images/farming1.png",
+        "backgroundImage": "./assets/images/farming1.png",
+        "monochromeImage": "./assets/images/farming1.png"
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false
     },
     "web": {
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/icon.png"
     },
     "plugins": [
       "expo-router",
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
+          "image": "./assets/images/farming1.png",
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff",
@@ -44,6 +45,12 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "66834d59-02fe-44c1-a5fb-f2343d9f41b3"
+      }
     }
   }
 }
