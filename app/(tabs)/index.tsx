@@ -215,7 +215,8 @@ export default function Index() {
             th { background-color: #22e650ff; color: black; padding: 8px; text-align: center; border: 1px solid #000; font-size: 12px; }
             td { padding: 8px; text-align: center; border: 1px solid #000; background-color: #f0f0f0ff; font-size: 12px; }
             .total-row td { font-weight: bold; }
-            .total-label { text-align: left; padding-left: 10px; color: black; background-color: #e67e22; }
+            .total-label { text-align: left; padding-left: 10px; color: black; background-color: #c0c0c0ff; }
+            td:last-child { color: red; font-weight: bold; }
           </style>
         </head>
         <body>
