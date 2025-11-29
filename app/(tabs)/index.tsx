@@ -1,5 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import DateTimePicker from '@react-native-community/datetimepicker';
+import * as FileSystem from 'expo-file-system/legacy';
 import * as Print from 'expo-print';
 import { useRouter } from "expo-router";
 import { shareAsync } from 'expo-sharing';
@@ -99,7 +100,13 @@ export default function Index() {
 
     try {
       const { uri } = await Print.printToFileAsync({ html });
-      await shareAsync(uri, { UTI: '.pdf', mimeType: 'application/pdf' });
+      const filename = `${item.date}_${item.seller}_${item.total}.pdf`;
+      const newUri = (FileSystem as any).documentDirectory + filename;
+      await (FileSystem as any).moveAsync({
+        from: uri,
+        to: newUri,
+      });
+      await shareAsync(newUri, { UTI: '.pdf', mimeType: 'application/pdf' });
     } catch (error) {
       Alert.alert("Error", "Failed to generate or share PDF");
       console.error(error);
@@ -233,7 +240,20 @@ export default function Index() {
 
     try {
       const { uri } = await Print.printToFileAsync({ html });
-      await shareAsync(uri, { UTI: '.pdf', mimeType: 'application/pdf' });
+
+      // Calculate total for filename
+      const totalAmount = filteredItems.reduce((sum, item) => sum + (parseFloat(item.total) || 0), 0);
+      const totalExpense = Object.keys(itemsBySeller).length * expenseAmount;
+      const totalForFilename = totalAmount - totalExpense;
+
+      const filename = `${currentMonth}_${selectedSeller || 'All'}_${totalForFilename.toFixed(2)}.pdf`;
+      const newUri = (FileSystem as any).documentDirectory + filename;
+      await (FileSystem as any).moveAsync({
+        from: uri,
+        to: newUri,
+      });
+
+      await shareAsync(newUri, { UTI: '.pdf', mimeType: 'application/pdf' });
       setModalVisible(false);
       setReportExpense(""); // Reset expense after generation
       setSelectedSeller(undefined); // Reset selection
@@ -299,12 +319,12 @@ export default function Index() {
         ).length === 0 ? (
           <Text className="text-gray-500 text-lg text-center mt-10">No items found.</Text>
         ) : (
-            items.filter(item =>
-              item.seller.toLowerCase().includes(searchQuery.toLowerCase()) ||
-              item.item.toLowerCase().includes(searchQuery.toLowerCase()) ||
-              item.date.includes(searchQuery) ||
-              formatDate(item.date).includes(searchQuery)
-            ).map((item) => (
+          items.filter(item =>
+            item.seller.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            item.item.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            item.date.includes(searchQuery) ||
+            formatDate(item.date).includes(searchQuery)
+          ).map((item) => (
             <TouchableOpacity key={item.id} onPress={() => handleEdit(item)} className="bg-white p-4 rounded-xl mb-3 shadow-sm">
               <View className="flex-row justify-between mb-2">
                 <Text className="font-bold text-lg">{item.seller}</Text>
