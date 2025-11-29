@@ -184,6 +184,11 @@ export default function Index() {
       const sellerItems = itemsBySeller[seller];
       let rowsHtml = '';
       let grandTotal = 0;
+      let totalDag = 0;
+      let totalQty = 0;
+      let totalPrice = 0;
+      let totalSubtotal = 0;
+      let totalExpenseTotal = 0;
 
       sellerItems.forEach(item => {
         rowsHtml += `
@@ -199,8 +204,14 @@ export default function Index() {
           </tr>
         `;
         grandTotal += parseFloat(item.total) || 0;
+        totalDag += parseFloat(item.dag) || 0;
+        totalQty += parseFloat(item.qty) || 0;
+        totalPrice += parseFloat(item.price) || 0;
+        totalSubtotal += parseFloat(item.subtotal) || 0;
+        totalExpenseTotal += parseFloat(item.expenseTotal) || 0;
       });
 
+      const averagePrice = sellerItems.length > 0 ? totalPrice / sellerItems.length : 0;
       const netTotal = grandTotal - expenseAmount;
 
       sellersHtml += `
@@ -222,8 +233,13 @@ export default function Index() {
             <tbody>
               ${rowsHtml}
               <tr class="total-row">
-                <td colspan="7" class="total-label" style="text-align: left;">Total :</td>
-                <td>${grandTotal.toFixed(2)}</td>
+                <td colspan="2" class="total-label" style="text-align: left;">Total :</td>
+                <td style="color: red;">${totalDag}</td>
+                <td style="color: red;">${totalQty}</td>
+                <td style="color: red;">${averagePrice.toFixed(2)}</td>
+                <td style="color: red;">${totalSubtotal.toFixed(2)}</td>
+                <td style="color: red;">${totalExpenseTotal.toFixed(2)}</td>
+                <td style="color: red;">${grandTotal.toFixed(2)}</td>
               </tr>
               ${expenseAmount > 0 ? `
               <tr class="total-row">
