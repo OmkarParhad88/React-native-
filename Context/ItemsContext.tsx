@@ -19,6 +19,7 @@ interface ItemsContextType {
   addItem: (item: Item) => void;
   updateItem: (item: Item) => void;
   deleteItem: (id: string) => void;
+  refreshItems: () => void;
   sellerSuggestions: string[];
   itemSuggestions: string[];
 }
@@ -35,11 +36,15 @@ export const ItemsProvider = ({ children }: { children: ReactNode }) => {
     setItemSuggestions(getUniqueItems());
   };
 
-  useEffect(() => {
-    initDB();
+  const refreshItems = () => {
     const loadedItems = getItems();
     setItems(loadedItems);
     refreshSuggestions();
+  };
+
+  useEffect(() => {
+    initDB();
+    refreshItems();
   }, []);
 
   const addItem = (item: Item) => {
@@ -61,7 +66,7 @@ export const ItemsProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <ItemsContext.Provider value={{ items, addItem, updateItem, deleteItem, sellerSuggestions, itemSuggestions }}>
+    <ItemsContext.Provider value={{ items, addItem, updateItem, deleteItem, refreshItems, sellerSuggestions, itemSuggestions }}>
       {children}
     </ItemsContext.Provider>
   );

@@ -118,7 +118,7 @@ export default function Index() {
                   </tr>
                   <tr class="total-row">
                     <td colspan="7" class="total-label" style="text-align: left;">Total :</td>
-                    <td>${item.total}</td>
+                    <td style="background-color: green; color: white; font-weight: bold; font-size: 26px;">${item.total}</td>
                   </tr>
                 </tbody>
               </table>
@@ -232,21 +232,21 @@ export default function Index() {
                 <td colspan="2" class="total-label" style="text-align: left;">Total :</td>
                 <td style="color: red;">${totalDag}</td>
                 <td style="color: red;">${totalQty}</td>
-                <td style="color: red;">${averagePrice.toFixed(2)}</td>
-                <td style="color: red;">${totalSubtotal.toFixed(2)}</td>
-                <td style="color: red;">${totalExpenseTotal.toFixed(2)}</td>
-                <td style="color: red;">${grandTotal.toFixed(2)}</td>
+                <td style="color: red;"> Avg - ${averagePrice}</td>
+                <td style="color: red;">${totalSubtotal}</td>
+                <td style="color: red;">${totalExpenseTotal}</td>
+                <td style="background-color: green; color: white; font-weight: bold;">${grandTotal}</td>
               </tr>
-              ${expenseAmount > 0 ? `
+              
               <tr class="total-row">
-                <td colspan="7" class="total-label" style="text-align: left;">Less: Additional Expense :</td>
-                <td style="color: red;">${expenseAmount.toFixed(2)}</td>
+                <td colspan="7" class="total-label" style="text-align: left;">Additional Expense :</td>
+                <td style="color: red;">${expenseAmount}</td>
               </tr>
               <tr class="total-row">
-                <td colspan="7" class="total-label" style="text-align: left;">Net Total :</td>
-                <td>${netTotal.toFixed(2)}</td>
+                <td colspan="7" class="total-label" style="text-align: left; font-weight: bold; font-size: 26px;">Net Total :</td>
+                <td style="background-color: green; color: white; font-weight: bold; font-size: 26px;">${netTotal}</td>
               </tr>
-              ` : ''}
+              
             </tbody>
           </table>
         </div>
@@ -303,7 +303,7 @@ export default function Index() {
 
       await handlePdfAction(newUri);
       setModalVisible(false);
-      setReportExpense(""); // Reset expense after generation
+      setReportExpense("0"); // Reset expense after generation
       setSelectedSeller(undefined); // Reset selection
     } catch (error) {
       Alert.alert("Error", "Failed to generate or share PDF");
