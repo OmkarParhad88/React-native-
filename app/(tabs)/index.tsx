@@ -13,18 +13,38 @@ import { useItems } from "../../Context/ItemsContext";
 export default function Index() {
 
   const router = useRouter();
-  const { items } = useItems();
+  const { items, deleteItem } = useItems();
   const [searchQuery, setSearchQuery] = React.useState("");
   const [reportDate, setReportDate] = React.useState(new Date());
   const [reportExpense, setReportExpense] = React.useState("");
   const [showDatePicker, setShowDatePicker] = React.useState(false);
   const [showSearchDatePicker, setShowSearchDatePicker] = React.useState(false);
+  const [pdfActionVisible, setPdfActionVisible] = React.useState(false);
+  const [generatedPdfUri, setGeneratedPdfUri] = React.useState("");
 
   const handleEdit = (item: any) => {
     router.push({
       pathname: "/(tabs)/New",
       params: { ...item }
     });
+  };
+
+  const handleDelete = (id: string) => {
+    Alert.alert(
+      "Delete Item",
+      "Are you sure you want to delete this item?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel"
+        },
+        {
+          text: "Delete",
+          onPress: () => deleteItem(id),
+          style: "destructive"
+        }
+      ]
+    );
   };
 
   const formatDate = (dateString: string) => {
@@ -34,34 +54,8 @@ export default function Index() {
   };
 
   const handlePdfAction = async (uri: string) => {
-    Alert.alert("PDF Generated", "What would you like to do?", [
-      {
-        text: "Preview",
-        onPress: async () => {
-          try {
-            const contentUri = await getContentUriAsync(uri);
-            await IntentLauncher.startActivityAsync('android.intent.action.VIEW', {
-              data: contentUri,
-              flags: 1,
-              type: 'application/pdf',
-            });
-          } catch (e) {
-            console.error(e);
-            Alert.alert("Error", "Could not open preview.");
-          }
-        }
-      },
-      {
-        text: "Share",
-        onPress: async () => {
-          await shareAsync(uri, { UTI: '.pdf', mimeType: 'application/pdf' });
-        }
-      },
-      {
-        text: "Cancel",
-        style: "cancel"
-      }
-    ]);
+    setGeneratedPdfUri(uri);
+    setPdfActionVisible(true);
   };
 
   const generatePdf = async (item: any) => {
@@ -71,18 +65,18 @@ export default function Index() {
           <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
           <style>
             body { font-family: Helvetica, Arial, sans-serif; padding: 20px; }
-            .provider-header { margin-bottom: 20px; }
-            .provider-name { font-size: 24px; font-weight: bold; color: #ff0000ff; margin-bottom: 5px; }
+            .provider-header { margin-bottom: 30px; }
+            .provider-name { font-size: 30px; font-weight: bold; color: #ff0000ff; margin-bottom: 5px; }
             .provider-label {  }
-            .info-line { margin: 5px 0; font-size: 14px; }
+            .info-line { margin: 5px 0; font-size: 26px; }
             .seller-section { margin-top: 30px; margin-bottom: 40px; page-break-inside: avoid; }
-            .seller-name { font-size: 20px; font-weight: bold; color: #0099ffff; margin-bottom: 10px; }
+            .seller-name { font-size: 24px; font-weight: bold; color: #0099ffff; margin-bottom: 10px; }
             .seller-label { }
             table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-            th { background-color: #22e650ff; color: black; padding: 8px; text-align: center; border: 1px solid #000; font-size: 12px; }
-            td { padding: 8px; text-align: center; border: 1px solid #000; background-color: #f0f0f0ff; font-size: 12px; }
+            th { background-color: #22e650ff; color: black; padding: 8px; text-align: center; border: 1px solid #000; font-size: 14px; }
+            td { padding: 8px; text-align: center; border: 1px solid #000; background-color: #f0f0f0ff; font-size: 14px; }
             .total-row td { font-weight: bold; }
-            .total-label { text-align: left; padding-left: 10px; color: black; background-color: #e6e6e6ff; }
+            .total-label { text-align: left; padding-left: 10px; color: black; background-color: #e6e6e6ff; font-weight: bold; }
             td:last-child { color: red; font-weight: bold; }
           </style>
         </head>
@@ -244,7 +238,7 @@ export default function Index() {
               ${expenseAmount > 0 ? `
               <tr class="total-row">
                 <td colspan="7" class="total-label" style="text-align: left;">Less: Additional Expense :</td>
-                <td>${expenseAmount.toFixed(2)}</td>
+                <td style="color: red;">${expenseAmount.toFixed(2)}</td>
               </tr>
               <tr class="total-row">
                 <td colspan="7" class="total-label" style="text-align: left;">Net Total :</td>
@@ -264,12 +258,12 @@ export default function Index() {
           <style>
             body { font-family: Helvetica, Arial, sans-serif; padding: 20px; }
             .provider-header { margin-bottom: 20px; }
-            .provider-name { font-size: 24px; font-weight: bold; color: #ff0000ff; margin-bottom: 5px; }
+            .provider-name { font-size: 40px; font-weight: bold; color: #ff0000ff; margin-bottom: 5px; }
             .provider-label {  }
-            .info-line { margin: 5px 0; font-size: 14px; }
+            .info-line { margin: 5px 0; font-size: 26px; }
             .seller-section { margin-top: 30px; margin-bottom: 40px; page-break-inside: avoid; }
-            .seller-name { font-size: 20px; font-weight: bold; color: #0099ffff; margin-bottom: 10px; }
-            .seller-label { }
+            .seller-name { font-size: 34px; font-weight: bold; color: #0099ffff; margin-bottom: 10px; }
+            .seller-label {font-weight: bold; }
             table { width: 100%; border-collapse: collapse; margin-top: 10px; }
             th { background-color: #22e650ff; color: black; padding: 8px; text-align: center; border: 1px solid #000; font-size: 12px; }
             td { padding: 8px; text-align: center; border: 1px solid #000; background-color: #f0f0f0ff; font-size: 12px; }
@@ -388,9 +382,15 @@ export default function Index() {
                   <Text className="font-semibold">Qty: {item.qty}</Text>
                   <Text className="font-bold text-blue-600">Total: {item.total}</Text>
                 </View>
-                <TouchableOpacity onPress={() => generatePdf(item)} className="bg-indigo-50 p-2 rounded-full border border-indigo-100">
-                  <Ionicons name="download-outline" size={20} color="#4f46e5" />
-                </TouchableOpacity>
+                <View className="flex-row">
+                  <TouchableOpacity onPress={() => generatePdf(item)} className="bg-indigo-50 p-2 rounded-full border border-indigo-100 mr-3">
+                    <Ionicons name="share-outline" size={20} color="#4f46e5" />
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => handleDelete(item.id)} className="bg-red-50 p-2 rounded-full border border-red-100">
+                    <Ionicons name="trash-outline" size={20} color="#ef4444" />
+                  </TouchableOpacity>
+
+                </View>
               </View>
             </TouchableOpacity>
           ))
@@ -479,7 +479,49 @@ export default function Index() {
           </View>
         </View>
       )}
+      {/* PDF Action Modal */}
+      {pdfActionVisible && (
+        <View className="absolute top-0 left-0 right-0 bottom-0 justify-center items-center bg-black/50 p-5">
+          <View className="bg-white rounded-2xl p-5 w-full max-w-sm">
+            <Text className="text-2xl font-bold mb-6 text-center">PDF Generated</Text>
 
+            <TouchableOpacity
+              onPress={async () => {
+                try {
+                  const contentUri = await getContentUriAsync(generatedPdfUri);
+                  await IntentLauncher.startActivityAsync('android.intent.action.VIEW', {
+                    data: contentUri,
+                    flags: 1,
+                    type: 'application/pdf',
+                  });
+                } catch (e) {
+                  console.error(e);
+                  Alert.alert("Error", "Could not open preview.");
+                }
+              }}
+              className="bg-indigo-600 p-4 rounded-xl mb-4"
+            >
+              <Text className="text-center font-bold text-white text-xl">Preview PDF</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={async () => {
+                await shareAsync(generatedPdfUri, { UTI: '.pdf', mimeType: 'application/pdf' });
+              }}
+              className="bg-blue-600 p-4 rounded-xl mb-4"
+            >
+              <Text className="text-center font-bold text-white text-xl">Share PDF</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={() => setPdfActionVisible(false)}
+              className="bg-gray-200 p-4 rounded-xl"
+            >
+              <Text className="text-center font-bold text-gray-700 text-xl">Close</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      )}
     </View>
   );
 }

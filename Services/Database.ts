@@ -69,6 +69,14 @@ export const updateItem = (item: Item) => {
   }
 };
 
+export const deleteItem = (id: string) => {
+  try {
+    db.runSync('DELETE FROM items WHERE id = ?', [id]);
+  } catch (error) {
+    console.error("Error deleting item:", error);
+  }
+};
+
 export const getUniqueSellers = (): string[] => {
   try {
     const result = db.getAllSync('SELECT DISTINCT seller FROM items WHERE seller IS NOT NULL AND seller != ""');
