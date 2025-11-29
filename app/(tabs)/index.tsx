@@ -1,6 +1,8 @@
 import { Ionicons } from "@expo/vector-icons";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import * as FileSystem from 'expo-file-system/legacy';
+import { getContentUriAsync } from 'expo-file-system/legacy';
+import * as IntentLauncher from 'expo-intent-launcher';
 import * as Print from 'expo-print';
 import { useRouter } from "expo-router";
 import { shareAsync } from 'expo-sharing';
@@ -29,6 +31,37 @@ export default function Index() {
     if (!dateString) return "";
     const [year, month, day] = dateString.split('-');
     return `${day}-${month}-${year}`;
+  };
+
+  const handlePdfAction = async (uri: string) => {
+    Alert.alert("PDF Generated", "What would you like to do?", [
+      {
+        text: "Preview",
+        onPress: async () => {
+          try {
+            const contentUri = await getContentUriAsync(uri);
+            await IntentLauncher.startActivityAsync('android.intent.action.VIEW', {
+              data: contentUri,
+              flags: 1,
+              type: 'application/pdf',
+            });
+          } catch (e) {
+            console.error(e);
+            Alert.alert("Error", "Could not open preview.");
+          }
+        }
+      },
+      {
+        text: "Share",
+        onPress: async () => {
+          await shareAsync(uri, { UTI: '.pdf', mimeType: 'application/pdf' });
+        }
+      },
+      {
+        text: "Cancel",
+        style: "cancel"
+      }
+    ]);
   };
 
   const generatePdf = async (item: any) => {
@@ -106,7 +139,7 @@ export default function Index() {
         from: uri,
         to: newUri,
       });
-      await shareAsync(newUri, { UTI: '.pdf', mimeType: 'application/pdf' });
+      await handlePdfAction(newUri);
     } catch (error) {
       Alert.alert("Error", "Failed to generate or share PDF");
       console.error(error);
@@ -126,6 +159,9 @@ export default function Index() {
     if (selectedSeller) {
       filteredItems = filteredItems.filter(item => item.seller === selectedSeller);
     }
+
+    // Sort items by date (ascending)
+    filteredItems.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
     if (filteredItems.length === 0) {
       Alert.alert("No Data", "No items found for this month" + (selectedSeller ? ` for ${selectedSeller}` : "") + ".");
@@ -253,7 +289,7 @@ export default function Index() {
         to: newUri,
       });
 
-      await shareAsync(newUri, { UTI: '.pdf', mimeType: 'application/pdf' });
+      await handlePdfAction(newUri);
       setModalVisible(false);
       setReportExpense(""); // Reset expense after generation
       setSelectedSeller(undefined); // Reset selection
