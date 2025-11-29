@@ -9,11 +9,13 @@ import { shareAsync } from 'expo-sharing';
 import React from 'react';
 import { Alert, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { useItems } from "../../Context/ItemsContext";
+import { useTheme } from "../../Context/ThemeContext";
 
 export default function Index() {
 
   const router = useRouter();
   const { items, deleteItem } = useItems();
+  const { colors } = useTheme();
   const [searchQuery, setSearchQuery] = React.useState("");
   const [reportDate, setReportDate] = React.useState(new Date());
   const [reportExpense, setReportExpense] = React.useState("");
@@ -310,21 +312,21 @@ export default function Index() {
   };
 
   return (
-    <View className="flex-1  bg-blue-200">
+    <View className="flex-1" style={{ backgroundColor: colors.background }}>
 
       <ScrollView className="flex-1 px-5 " showsVerticalScrollIndicator={false} contentContainerStyle={{
         minHeight: "100%",
         paddingBottom: 10
       }}>
         <View className="flex-row justify-between items-center mt-10 mb-5">
-          <Text className="text-5xl text-indigo-600 font-bold">Pravin Parhad</Text>
-          <TouchableOpacity onPress={() => setModalVisible(true)} className="bg-blue-600 p-3 rounded-lg">
+          <Text className="text-5xl font-bold" style={{ color: colors.primary }}>Pravin Parhad</Text>
+          <TouchableOpacity onPress={() => setModalVisible(true)} className="p-3 rounded-lg" style={{ backgroundColor: colors.primary }}>
             <Text className="text-white font-bold">Month Report</Text>
           </TouchableOpacity>
         </View>
 
         {/* Search Bar */}
-        <View className="bg-white p-3 rounded-xl mb-4 flex-row items-center shadow-sm">
+        <View className="p-3 rounded-xl mb-4 flex-row items-center shadow-sm" style={{ backgroundColor: colors.card }}>
           <Ionicons name="search" size={20} color="gray" />
           <TextInput
             placeholder="Search seller, item, or date..."
@@ -371,16 +373,16 @@ export default function Index() {
             item.date.includes(searchQuery) ||
             formatDate(item.date).includes(searchQuery)
           ).map((item) => (
-            <TouchableOpacity key={item.id} onPress={() => handleEdit(item)} className="bg-white p-4 rounded-xl mb-3 shadow-sm">
+            <TouchableOpacity key={item.id} onPress={() => handleEdit(item)} className="p-4 rounded-xl mb-3 shadow-sm" style={{ backgroundColor: colors.card }}>
               <View className="flex-row justify-between mb-2">
-                <Text className="font-bold text-lg">{item.seller}</Text>
-                <Text className="text-gray-500">{formatDate(item.date)}</Text>
+                <Text className="font-bold text-lg" style={{ color: colors.primary }}>{item.seller}</Text>
+                <Text style={{ color: colors.text }}>{formatDate(item.date)}</Text>
               </View>
-              <Text className="text-gray-700">Item: {item.item}</Text>
+              <Text style={{ color: colors.text }}>Item: {item.item}</Text>
               <View className="flex-row justify-between mt-2 items-center">
                 <View>
-                  <Text className="font-semibold">Qty: {item.qty}</Text>
-                  <Text className="font-bold text-blue-600">Total: {item.total}</Text>
+                  <Text className="font-semibold" style={{ color: colors.text }}>Qty: {item.qty}</Text>
+                  <Text className="font-bold" style={{ color: colors.primary }}>Total: {item.total}</Text>
                 </View>
                 <View className="flex-row">
                   <TouchableOpacity onPress={() => generatePdf(item)} className="bg-indigo-50 p-2 rounded-full border border-indigo-100 mr-3">

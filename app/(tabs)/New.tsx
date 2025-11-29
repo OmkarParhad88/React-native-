@@ -5,6 +5,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Alert, KeyboardAvoidingView, Platform, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
 import AutocompleteInput from "../../Components/AutocompleteInput";
 import { useItems } from "../../Context/ItemsContext";
+import { useTheme } from "../../Context/ThemeContext";
 
 const New = () => {
     const params = useLocalSearchParams();
@@ -23,6 +24,7 @@ const New = () => {
     const [total, setTotal] = useState<string>("");
 
     const { addItem, updateItem, sellerSuggestions, itemSuggestions } = useItems();
+    const { colors } = useTheme();
     const router = useRouter();
     const navigation = useNavigation();
 
@@ -127,8 +129,7 @@ const New = () => {
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
-            style={{ flex: 1 }}
-            className="bg-indigo-50"
+            style={{ flex: 1, backgroundColor: colors.background }}
         >
             <ScrollView
                 contentContainerStyle={{ padding: 24, paddingBottom: 100 }}
@@ -136,33 +137,35 @@ const New = () => {
                 showsVerticalScrollIndicator={false}
             >
                 <View className="mb-6 mt-4">
-                    <Text className="text-3xl font-extrabold text-indigo-900">{isEditMode ? "Edit Entry" : "New Entry"}</Text>
-                    <Text className="text-indigo-600 text-base">{isEditMode ? "Update transaction details" : "Add a new transaction"}</Text>
+                    <Text className="text-3xl font-extrabold" style={{ color: colors.primary }}>{isEditMode ? "Edit Entry" : "New Entry"}</Text>
+                    <Text className="text-base" style={{ color: colors.text }}>{isEditMode ? "Update transaction details" : "Add a new transaction"}</Text>
                 </View>
 
-                <View className="bg-white p-6 rounded-3xl shadow-xl shadow-indigo-100">
+                <View className="p-6 rounded-3xl shadow-xl" style={{ backgroundColor: colors.card, shadowColor: colors.primary }}>
 
                     {/* Seller Section - High z-index for dropdown */}
                     <View className="mb-5 z-50">
-                        <Text className="text-indigo-900 font-bold text-base ml-1 mb-2">Seller Name <Text className="text-red-500">*</Text></Text>
+                        <Text className="font-bold text-base ml-1 mb-2" style={{ color: colors.primary }}>Seller Name <Text className="text-red-500">*</Text></Text>
                         <AutocompleteInput
                             data={sellerSuggestions}
                             value={seller}
                             onChangeText={setSeller}
                             placeholder="e.g. John Doe"
-                            className="bg-gray-50 border border-gray-200 rounded-2xl p-4 text-gray-800 text-base"
+                            className="border rounded-2xl p-4 text-base"
+                            style={{ backgroundColor: colors.background, borderColor: colors.primary, color: colors.text }}
                         />
                     </View>
 
                     {/* Date Section */}
                     <View className="mb-5 -z-10">
-                        <Text className="text-indigo-900 font-bold text-base ml-1 mb-2">Date <Text className="text-red-500">*</Text></Text>
+                        <Text className="font-bold text-base ml-1 mb-2" style={{ color: colors.primary }}>Date <Text className="text-red-500">*</Text></Text>
                         <TouchableOpacity
                             onPress={() => setShowDatePicker(true)}
-                            className="bg-gray-50 border border-gray-200 rounded-2xl p-4 flex-row items-center justify-between"
+                            className="border rounded-2xl p-4 flex-row items-center justify-between"
+                            style={{ backgroundColor: colors.background, borderColor: colors.primary }}
                         >
-                            <Text className="text-gray-800 text-base">{date.toISOString().split('T')[0].split('-').reverse().join('-')}</Text>
-                            <Ionicons name="calendar-outline" size={20} color="#4f46e5" />
+                            <Text className="text-base" style={{ color: colors.text }}>{date.toISOString().split('T')[0].split('-').reverse().join('-')}</Text>
+                            <Ionicons name="calendar-outline" size={20} color={colors.primary} />
                         </TouchableOpacity>
                         {showDatePicker && (
                             <DateTimePicker
@@ -181,60 +184,67 @@ const New = () => {
 
                     {/* Item Section - High z-index for dropdown */}
                     <View className="mb-5 z-40">
-                        <Text className="text-indigo-900 font-bold text-base ml-1 mb-2">Item <Text className="text-red-500">*</Text></Text>
+                        <Text className="font-bold text-base ml-1 mb-2" style={{ color: colors.primary }}>Item <Text className="text-red-500">*</Text></Text>
                         <AutocompleteInput
                             data={itemSuggestions}
                             value={item}
                             onChangeText={setItem}
                             placeholder="e.g. Kamini"
-                            className="bg-gray-50 border border-gray-200 rounded-2xl p-4 text-gray-800 text-base"
+                            className="border rounded-2xl p-4 text-base"
+                            style={{ backgroundColor: colors.background, borderColor: colors.primary, color: colors.text }}
                         />
                     </View>
 
                     {/* Row for Dag & Qty */}
                     <View className="flex-row justify-between mb-5 -z-10">
                         <View className="w-[48%]">
-                            <Text className="text-indigo-900 font-bold text-base ml-1 mb-2">Dag</Text>
+                            <Text className="font-bold text-base ml-1 mb-2" style={{ color: colors.primary }}>Dag</Text>
                             <TextInput
                                 value={dag}
                                 onChangeText={setDag}
                                 keyboardType="numeric"
                                 placeholder="0"
-                                className="bg-gray-50 border border-gray-200 rounded-2xl p-4 text-gray-800 text-base"
+                                className="border rounded-2xl p-4 text-base"
+                                style={{ backgroundColor: colors.background, borderColor: colors.primary, color: colors.text }}
+                                placeholderTextColor="gray"
                             />
                         </View>
                         <View className="w-[48%]">
-                            <Text className="text-indigo-900 font-bold text-base ml-1 mb-2">Quantity <Text className="text-red-500">*</Text></Text>
+                            <Text className="font-bold text-base ml-1 mb-2" style={{ color: colors.primary }}>Quantity <Text className="text-red-500">*</Text></Text>
                             <TextInput
                                 value={qty}
                                 onChangeText={setQty}
                                 keyboardType="numeric"
                                 placeholder="0"
-                                className="bg-gray-50 border border-gray-200 rounded-2xl p-4 text-gray-800 text-base"
+                                className="border rounded-2xl p-4 text-base"
+                                style={{ backgroundColor: colors.background, borderColor: colors.primary, color: colors.text }}
+                                placeholderTextColor="gray"
                             />
                         </View>
                     </View>
 
                     {/* Price Section */}
                     <View className="mb-5 -z-10">
-                        <Text className="text-indigo-900 font-bold text-base ml-1 mb-2">Price per Unit</Text>
+                        <Text className="font-bold text-base ml-1 mb-2" style={{ color: colors.primary }}>Price per Unit</Text>
                         <View className="relative">
                             <TextInput
                                 value={price}
                                 onChangeText={setPrice}
                                 keyboardType="numeric"
                                 placeholder="0.00"
-                                className="bg-gray-50 border border-gray-200 rounded-2xl p-4 text-gray-800 text-base pl-8"
+                                className="border rounded-2xl p-4 text-base pl-8"
+                                style={{ backgroundColor: colors.background, borderColor: colors.primary, color: colors.text }}
+                                placeholderTextColor="gray"
                             />
                             <Text className="absolute left-4 top-4 text-gray-400">₹</Text>
                         </View>
                     </View>
 
                     {/* Calculations Section */}
-                    <View className="bg-indigo-50 p-4 rounded-2xl mb-5 border border-indigo-100 -z-10">
+                    <View className="p-4 rounded-2xl mb-5 border -z-10" style={{ backgroundColor: colors.background, borderColor: colors.primary }}>
                         <View className="flex-row justify-between items-center mb-3">
-                            <Text className="text-indigo-700 font-semibold">Subtotal</Text>
-                            <Text className="text-indigo-900 font-bold text-lg">₹{subtotal || '0'}</Text>
+                            <Text className="font-semibold" style={{ color: colors.primary }}>Subtotal</Text>
+                            <Text className="font-bold text-lg" style={{ color: colors.text }}>₹{subtotal || '0'}</Text>
                         </View>
 
                         <View className="flex-row justify-between items-center mb-3">
@@ -248,18 +258,19 @@ const New = () => {
                             />
                         </View>
 
-                        <View className="h-[1px] bg-indigo-200 my-2" />
+                        <View className="h-[1px] my-2" style={{ backgroundColor: colors.primary }} />
 
                         <View className="flex-row justify-between items-center mt-1">
-                            <Text className="text-indigo-900 font-bold text-lg">Total</Text>
-                            <Text className="text-indigo-600 font-extrabold text-2xl">₹{total || '0'}</Text>
+                            <Text className="font-bold text-lg" style={{ color: colors.primary }}>Total</Text>
+                            <Text className="font-extrabold text-2xl" style={{ color: colors.primary }}>₹{total || '0'}</Text>
                         </View>
                     </View>
 
                     {/* Submit Button */}
                     <TouchableOpacity
                         onPress={handleSubmit}
-                        className="bg-indigo-600 p-5 rounded-full items-center shadow-lg shadow-indigo-300 active:bg-indigo-700 mt-2"
+                        className="p-5 rounded-full items-center shadow-lg mt-2"
+                        style={{ backgroundColor: colors.primary, shadowColor: colors.primary }}
                     >
                         <Text className="text-white font-bold text-xl">{isEditMode ? "Update Entry" : "Save Entry"}</Text>
                     </TouchableOpacity>

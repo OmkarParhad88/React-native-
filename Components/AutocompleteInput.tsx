@@ -7,9 +7,11 @@ interface AutocompleteInputProps {
   onChangeText: (text: string) => void;
   placeholder: string;
   className?: string;
+  style?: any;
+  placeholderTextColor?: string;
 }
 
-const AutocompleteInput: React.FC<AutocompleteInputProps> = ({ data = [], value, onChangeText, placeholder, className }) => {
+const AutocompleteInput: React.FC<AutocompleteInputProps> = ({ data = [], value, onChangeText, placeholder, className, style, placeholderTextColor }) => {
   const [filteredData, setFilteredData] = useState<string[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
 
@@ -38,6 +40,8 @@ const AutocompleteInput: React.FC<AutocompleteInputProps> = ({ data = [], value,
         onChangeText={handleInputChange}
         placeholder={placeholder}
         className={className}
+        style={style}
+        placeholderTextColor={placeholderTextColor}
         onFocus={() => {
           if (value) {
             const filtered = data.filter((item) =>

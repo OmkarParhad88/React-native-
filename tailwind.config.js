@@ -6,13 +6,10 @@ module.exports = {
     theme: {
         extend: {
             colors: {
-                primary: "#33ffff",
-                secondary: "#00cccc",
-                last : "#e6ffff",
-                success: "#00FF00",
-                info: "#00FF00",
-                warning: "#00FF00",
-                danger: "#00FF00",
+                primary: 'var(--color-primary)',
+                background: 'var(--color-background)',
+                text: 'var(--color-text)',
+                card: 'var(--color-card)',
             }
         },
     },

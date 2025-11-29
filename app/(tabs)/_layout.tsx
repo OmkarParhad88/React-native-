@@ -1,14 +1,22 @@
-
 import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
 import React from "react";
 import { StyleSheet } from 'react-native';
+import { useTheme } from "../../Context/ThemeContext";
 
 const _Layout = () => {
+    const { colors } = useTheme();
+
     return (
        <Tabs screenOptions={{
            headerShown: false,
            tabBarShowLabel: true,
+            tabBarActiveTintColor: colors.primary,
+            tabBarInactiveTintColor: colors.text,
+            tabBarStyle: {
+                backgroundColor: colors.card,
+                borderTopColor: colors.background,
+            },
            tabBarLabelStyle: {
                fontSize: 14,
                fontWeight: "600",
