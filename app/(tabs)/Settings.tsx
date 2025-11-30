@@ -2,7 +2,7 @@ import * as DocumentPicker from 'expo-document-picker';
 import * as FileSystem from 'expo-file-system/legacy';
 import * as Sharing from 'expo-sharing';
 import React from 'react';
-import { Alert, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Modal, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import XLSX from 'xlsx';
 import { useItems } from '../../Context/ItemsContext';
 import { useTheme } from '../../Context/ThemeContext';
@@ -10,7 +10,20 @@ import { getItems, insertItem } from '../../Services/Database';
 
 const Settings = () => {
   const { theme, setTheme, colors } = useTheme();
-  const { refreshItems } = useItems();
+  const { refreshItems, deleteAllItems } = useItems();
+  const [passwordModalVisible, setPasswordModalVisible] = React.useState(false);
+  const [password, setPassword] = React.useState("");
+
+  const handleDeleteAll = () => {
+    if (password === '9930358070') {
+      deleteAllItems();
+      setPasswordModalVisible(false);
+      setPassword("");
+      Alert.alert("Success", "All data has been deleted.");
+    } else {
+      Alert.alert("Error", "Incorrect password.");
+    }
+  };
 
   const exportToExcel = async () => {
     try {
@@ -126,6 +139,57 @@ const Settings = () => {
       >
         <Text className="text-white font-bold text-lg">Import Data from Excel</Text>
       </TouchableOpacity>
+
+      <TouchableOpacity
+        onPress={() => setPasswordModalVisible(true)}
+        className="px-8 py-4 rounded-xl shadow-lg flex-row items-center mb-10"
+        style={{ backgroundColor: '#ef4444' }} // Red-500
+      >
+        <Text className="text-white font-bold text-lg">Delete All Data</Text>
+      </TouchableOpacity>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={passwordModalVisible}
+        onRequestClose={() => setPasswordModalVisible(false)}
+      >
+        <View className="flex-1 justify-center items-center bg-black/50">
+          <View className="bg-white p-6 rounded-2xl w-4/5 shadow-2xl">
+            <Text className="text-xl font-bold mb-4 text-center text-gray-800">Enter Password</Text>
+            <Text className="text-sm text-gray-500 mb-4 text-center">Enter password to confirm deletion.</Text>
+
+            <TextInput
+              value={password}
+              onChangeText={setPassword}
+              placeholder="Password"
+              secureTextEntry
+              keyboardType="numeric"
+              className="border border-gray-300 rounded-xl p-3 mb-6 text-lg"
+              autoFocus
+            />
+
+            <View className="flex-row justify-between gap-4">
+              <TouchableOpacity
+                onPress={() => {
+                  setPasswordModalVisible(false);
+                  setPassword("");
+                }}
+                className="flex-1 bg-gray-200 p-3 rounded-xl"
+              >
+                <Text className="text-center font-bold text-gray-700">Cancel</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={handleDeleteAll}
+                className="flex-1 bg-red-500 p-3 rounded-xl"
+              >
+                <Text className="text-center font-bold text-white">Delete</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
 
       <Text className="text-xl font-bold mb-4" style={{ color: colors.text }}>Select Theme</Text>
       <View className="flex-row flex-wrap justify-center gap-4">

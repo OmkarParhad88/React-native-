@@ -96,3 +96,11 @@ export const getUniqueItems = (): string[] => {
     return [];
   }
 };
+
+export const deleteAllData = () => {
+  try {
+    db.runSync('DELETE FROM items');
+  } catch (error) {
+    console.error("Error deleting all data:", error);
+  }
+};

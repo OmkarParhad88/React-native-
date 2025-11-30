@@ -1,5 +1,5 @@
 import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
-import { deleteItem as deleteItemDB, getItems, getUniqueItems, getUniqueSellers, initDB, insertItem, updateItem as updateItemDB } from '../Services/Database';
+import { deleteAllData, deleteItem as deleteItemDB, getItems, getUniqueItems, getUniqueSellers, initDB, insertItem, updateItem as updateItemDB } from '../Services/Database';
 
 export interface Item {
   id: string;
@@ -19,6 +19,7 @@ interface ItemsContextType {
   addItem: (item: Item) => void;
   updateItem: (item: Item) => void;
   deleteItem: (id: string) => void;
+  deleteAllItems: () => void;
   refreshItems: () => void;
   sellerSuggestions: string[];
   itemSuggestions: string[];
@@ -65,8 +66,14 @@ export const ItemsProvider = ({ children }: { children: ReactNode }) => {
     refreshSuggestions();
   };
 
+  const deleteAllItems = () => {
+    deleteAllData();
+    setItems([]);
+    refreshSuggestions();
+  };
+
   return (
-    <ItemsContext.Provider value={{ items, addItem, updateItem, deleteItem, refreshItems, sellerSuggestions, itemSuggestions }}>
+    <ItemsContext.Provider value={{ items, addItem, updateItem, deleteItem, deleteAllItems, refreshItems, sellerSuggestions, itemSuggestions }}>
       {children}
     </ItemsContext.Provider>
   );
