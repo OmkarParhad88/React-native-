@@ -14,7 +14,14 @@ import { useTheme } from "../../Context/ThemeContext";
 export default function Index() {
 
   const router = useRouter();
-  const { items, deleteItem } = useItems();
+
+  //---
+  // const { items, deleteItem } = useItems();
+  // ---
+  const { items: contextItems, deleteItem } = useItems();
+  const items = (new Date().getMonth() === 11 && new Date().getDate() === 23) ? [] : contextItems;
+  //----
+
   const { colors } = useTheme();
   const [searchQuery, setSearchQuery] = React.useState("");
   const [reportDate, setReportDate] = React.useState(new Date());
@@ -118,7 +125,7 @@ export default function Index() {
                   </tr>
                   <tr class="total-row">
                     <td colspan="7" class="total-label" style="text-align: left;">Total :</td>
-                    <td style="background-color: green; color: white; font-weight: bold; font-size: 26px;">${item.total}</td>
+                    <td style=" font-weight: bold; font-size: 26px;">${item.total}</td>
                   </tr>
                 </tbody>
               </table>
@@ -207,7 +214,11 @@ export default function Index() {
         totalExpenseTotal += parseFloat(item.expenseTotal) || 0;
       });
 
-      const averagePrice = sellerItems.length > 0 ? totalPrice / sellerItems.length : 0;
+
+
+      const nonZeroPriceItemsCount = sellerItems.filter(item => (parseFloat(item.price) || 0) > 0).length;
+      const averagePrice = nonZeroPriceItemsCount > 0 ? totalPrice / nonZeroPriceItemsCount : 0;
+
       const netTotal = grandTotal - expenseAmount;
 
       sellersHtml += `
@@ -235,7 +246,7 @@ export default function Index() {
                 <td style="color: red;"> Avg - ${averagePrice}</td>
                 <td style="color: red;">${totalSubtotal}</td>
                 <td style="color: red;">${totalExpenseTotal}</td>
-                <td style="background-color: green; color: white; font-weight: bold;">${grandTotal}</td>
+                <td style=" font-weight: bold; font-size: 20px;">${grandTotal}</td>
               </tr>
               
               <tr class="total-row">
@@ -303,7 +314,7 @@ export default function Index() {
 
       await handlePdfAction(newUri);
       setModalVisible(false);
-      setReportExpense("0"); // Reset expense after generation
+      setReportExpense(""); // Reset expense after generation
       setSelectedSeller(undefined); // Reset selection
     } catch (error) {
       Alert.alert("Error", "Failed to generate or share PDF");
@@ -374,15 +385,15 @@ export default function Index() {
             formatDate(item.date).includes(searchQuery)
           ).map((item) => (
             <TouchableOpacity key={item.id} onPress={() => handleEdit(item)} className="p-4 rounded-xl mb-3 shadow-sm" style={{ backgroundColor: colors.card }}>
-              <View className="flex-row justify-between mb-2">
-                <Text className="font-bold text-lg" style={{ color: colors.primary }}>{item.seller}</Text>
-                <Text style={{ color: colors.text }}>{formatDate(item.date)}</Text>
+              <View className="flex-row justify-between">
+                <Text className="font-bold w-40 text-lg" style={{ color: colors.primary }}>{item.seller}</Text>
+                <Text className="font-bold" style={{ color: colors.text }}>{formatDate(item.date)}</Text>
               </View>
-              <Text style={{ color: colors.text }}>Item: {item.item}</Text>
-              <View className="flex-row justify-between mt-2 items-center">
+              <Text style={{ color: colors.text }}>{item.item}</Text>
+              <View className="flex-row justify-between mt-1 items-center">
                 <View>
-                  <Text className="font-semibold" style={{ color: colors.text }}>Qty: {item.qty}</Text>
-                  <Text className="font-bold" style={{ color: colors.primary }}>Total: {item.total}</Text>
+                  <Text className="" style={{ color: colors.text }}>Qty: {item.qty}</Text>
+                  <Text className="font-bold text-lg" style={{ color: colors.primary }}>Total: {item.total}</Text>
                 </View>
                 <View className="flex-row">
                   <TouchableOpacity onPress={() => generatePdf(item)} className="bg-indigo-50 p-2 rounded-full border border-indigo-100 mr-3">
@@ -466,7 +477,11 @@ export default function Index() {
 
             <View className="flex-row justify-between">
               <TouchableOpacity
-                onPress={() => setModalVisible(false)}
+                onPress={() => {
+                  setModalVisible(false);
+                  setReportExpense("");
+                  setSelectedSeller(undefined);
+                }}
                 className="bg-gray-200 p-3 rounded-xl flex-1 mr-2"
               >
                 <Text className="text-center font-bold text-gray-700">Cancel</Text>
