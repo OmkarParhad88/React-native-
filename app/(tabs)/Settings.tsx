@@ -25,7 +25,17 @@ const Settings = () => {
       XLSX.utils.book_append_sheet(wb, ws, "Items");
 
       const wbout = XLSX.write(wb, { type: 'base64', bookType: 'xlsx' });
-      const uri = FileSystem.cacheDirectory + 'data.xlsx';
+
+      // Calculate date range
+      const dates = items.map(item => new Date(item.date).getTime());
+      const minDate = new Date(Math.min(...dates));
+      const maxDate = new Date(Math.max(...dates));
+
+      const startMonth = `${minDate.getFullYear()}-${String(minDate.getMonth() + 1).padStart(2, '0')}`;
+      const endMonth = `${maxDate.getFullYear()}-${String(maxDate.getMonth() + 1).padStart(2, '0')}`;
+
+      const fileName = startMonth === endMonth ? `${startMonth}.xlsx` : `${startMonth}_to_${endMonth}.xlsx`;
+      const uri = FileSystem.cacheDirectory + fileName;
 
       await FileSystem.writeAsStringAsync(uri, wbout, {
         encoding: 'base64'

@@ -22,10 +22,10 @@ const AutocompleteInput: React.FC<AutocompleteInputProps> = ({ data = [], value,
         item.toLowerCase().includes(text.toLowerCase())
       );
       setFilteredData(filtered);
-      setShowSuggestions(true);
     } else {
-      setShowSuggestions(false);
+      setFilteredData(data);
     }
+    setShowSuggestions(true);
   };
 
   const handleSelectSuggestion = (item: string) => {
@@ -48,8 +48,10 @@ const AutocompleteInput: React.FC<AutocompleteInputProps> = ({ data = [], value,
               item.toLowerCase().includes(value.toLowerCase())
             );
             setFilteredData(filtered);
-            setShowSuggestions(true);
+          } else {
+            setFilteredData(data);
           }
+          setShowSuggestions(true);
         }}
       />
       {showSuggestions && filteredData.length > 0 && (
