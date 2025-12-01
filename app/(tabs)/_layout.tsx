@@ -8,62 +8,76 @@ const _Layout = () => {
     const { colors } = useTheme();
 
     return (
-       <Tabs screenOptions={{
-           headerShown: false,
-           tabBarShowLabel: true,
+        <Tabs screenOptions={{
+            headerShown: false,
+            tabBarShowLabel: true,
             tabBarActiveTintColor: colors.primary,
             tabBarInactiveTintColor: colors.text,
             tabBarStyle: {
                 backgroundColor: colors.card,
                 borderTopColor: colors.background,
             },
-           tabBarLabelStyle: {
-               fontSize: 14,
-               fontWeight: "600",
-           },
-       }}>
-           <Tabs.Screen
-            name = "index"
-            options={{
-                title: "Home",
-                headerShown: false,
-                tabBarIcon: ({ color, size, focused }) => (
-                    <Ionicons
-                        name={focused ? "home" : "home-outline"}
-                        size={size}
-                        color={color}
-                    />
-                ),
-            }}/>
-           <Tabs.Screen
-            name = "New"
-            options={{
-                title: "New",
-                tabBarIcon: ({ color, size, focused }) => (
-                    <Ionicons
-                        name={focused ? "add-circle" : "add-circle-outline"}
-                        size={size}
-                        color={color}
-                    />
-                ),
-            }}
-           />
-           <Tabs.Screen
+            tabBarLabelStyle: {
+                fontSize: 14,
+                fontWeight: "600",
+            },
+        }}>
+            <Tabs.Screen
+                name="index"
+                options={{
+                    title: "Home",
+                    headerShown: false,
+                    tabBarIcon: ({ color, size, focused }) => (
+                        <Ionicons
+                            name={focused ? "home" : "home-outline"}
+                            size={size}
+                            color={color}
+                        />
+                    ),
+                }} />
+
+            <Tabs.Screen
+                name="Items"
+                options={{
+                    title: "List",
+                    headerShown: false,
+                    tabBarIcon: ({ color, size, focused }) => (
+                        <Ionicons
+                            name={focused ? "list" : "list-outline"}
+                            size={size}
+                            color={color}
+                        />
+                    ),
+                }} />
+            <Tabs.Screen
+                name="New"
+                options={{
+                    title: "New",
+                    tabBarIcon: ({ color, size, focused }) => (
+                        <Ionicons
+                            name={focused ? "add-circle" : "add-circle-outline"}
+                            size={size}
+                            color={color}
+                        />
+                    ),
+                }}
+            />
+            <Tabs.Screen
                 name="Settings"
-            options={{
-                title: "Settings",
-                tabBarIcon: ({ color, size, focused }) => (
-                    <Ionicons
-                        name={focused ? "settings" : "settings-outline"}
-                        size={size}
-                        color={color}
-                    />
-                ),
-            }}
-           />
-       </Tabs>
+                options={{
+                    title: "Settings",
+                    tabBarIcon: ({ color, size, focused }) => (
+                        <Ionicons
+                            name={focused ? "settings" : "settings-outline"}
+                            size={size}
+                            color={color}
+                        />
+                    ),
+                }}
+            />
+        </Tabs>
     );
 };
 export default _Layout;
 
-const styles = StyleSheet.create({ })
+const styles = StyleSheet.create({})
