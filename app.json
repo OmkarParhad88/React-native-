@@ -3,6 +3,7 @@
     "name": "Pravin_Parhad",
     "slug": "Pravin_Parhad",
     "version": "1.0.0",
+    "jsEngine": "hermes",
     "orientation": "portrait",
     "icon": "./assets/images/prvin-kamini-2.png",
     "scheme": "pravinparhad",
@@ -10,6 +11,9 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true
+    },
+    "updates": {
+      "enabled": true
     },
     "android": {
       "package": "com.pravinparhad.farmingapp",
@@ -23,8 +27,9 @@
       "predictiveBackGestureEnabled": false
     },
     "web": {
+      "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/icon.png"
+      "favicon": "./assets/images/prvin-kamini-2.png"
     },
     "plugins": [
       "expo-router",
