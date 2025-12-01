@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
-import DateTimePicker from '@react-native-community/datetimepicker';
 import React, { useMemo, useState } from "react";
 import { Modal, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import DateFilterModal from "../../Components/DateFilterModal";
 import { useItems } from "../../Context/ItemsContext";
 import { useTheme } from "../../Context/ThemeContext";
 
@@ -109,19 +109,13 @@ export default function Index() {
           </TouchableOpacity>
         </View>
 
-        {showDatePicker && (
-          <DateTimePicker
-            value={date}
-            mode="date"
-            display="default"
-            onChange={(event, selectedDate) => {
-              setShowDatePicker(false);
-              if (selectedDate) {
-                setDate(selectedDate);
-              }
-            }}
-          />
-        )}
+        <DateFilterModal
+          visible={showDatePicker}
+          onClose={() => setShowDatePicker(false)}
+          onSelect={setDate}
+          mode={filterType}
+          currentDate={date}
+        />
 
         {/* Stats Cards */}
         <View className="flex-row justify-between mb-6">

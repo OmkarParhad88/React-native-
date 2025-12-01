@@ -8,6 +8,7 @@ import { useRouter } from "expo-router";
 import { shareAsync } from 'expo-sharing';
 import React from 'react';
 import { Alert, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
+import DateFilterModal from "../../Components/DateFilterModal";
 import { useItems } from "../../Context/ItemsContext";
 import { useTheme } from "../../Context/ThemeContext";
 
@@ -428,19 +429,13 @@ export default function Items() {
               </TouchableOpacity>
             </View>
 
-            {showDatePicker && (
-              <DateTimePicker
-                value={reportDate}
-                mode="date"
-                display="default"
-                onChange={(event, selectedDate) => {
-                  setShowDatePicker(false);
-                  if (selectedDate) {
-                    setReportDate(selectedDate);
-                  }
-                }}
-              />
-            )}
+            <DateFilterModal
+              visible={showDatePicker}
+              onClose={() => setShowDatePicker(false)}
+              onSelect={setReportDate}
+              mode="month"
+              currentDate={reportDate}
+            />
 
             <View className="mb-4">
               <Text className="text-gray-600 mb-2 font-semibold">Additional Expense</Text>

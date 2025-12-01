@@ -202,7 +202,7 @@ const New = () => {
 
                     {/* Land Section - High z-index for dropdown */}
                     <View className="mb-5 z-30">
-                        <Text className="font-bold text-base ml-1 mb-2" style={{ color: colors.primary }}>Land (Source)</Text>
+                        <Text className="font-bold text-base ml-1 mb-2" style={{ color: colors.primary }}>Land (Farm)</Text>
                         <AutocompleteInput
                             data={landSuggestions}
                             value={land}
