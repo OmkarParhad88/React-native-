@@ -22,8 +22,9 @@ const New = () => {
     const [subtotal, setSubtotal] = useState<string>("");
     const [expenseTotal, setExpenseTotal] = useState<string>("");
     const [total, setTotal] = useState<string>("");
+    const [land, setLand] = useState<string>("");
 
-    const { addItem, updateItem, sellerSuggestions, itemSuggestions } = useItems();
+    const { addItem, updateItem, sellerSuggestions, itemSuggestions, landSuggestions } = useItems();
     const { colors } = useTheme();
     const router = useRouter();
     const navigation = useNavigation();
@@ -42,6 +43,7 @@ const New = () => {
                 setSubtotal(params.subtotal as string || "");
                 setExpenseTotal(params.expenseTotal as string || "");
                 setTotal(params.total as string || "");
+                setLand(params.land as string || "");
             } else {
                 // New Mode: Reset form
                 setSeller("");
@@ -53,6 +55,7 @@ const New = () => {
                 setSubtotal("");
                 setExpenseTotal("");
                 setTotal("");
+                setLand("");
             }
         }, [id, params])
     );
@@ -73,7 +76,8 @@ const New = () => {
                     price: undefined,
                     subtotal: undefined,
                     expenseTotal: undefined,
-                    total: undefined
+                    total: undefined,
+                    land: undefined
                 });
             }, 100);
         });
@@ -116,6 +120,7 @@ const New = () => {
             subtotal,
             expenseTotal,
             total,
+            land
         };
 
         if (isEditMode) {
@@ -190,6 +195,19 @@ const New = () => {
                             value={item}
                             onChangeText={setItem}
                             placeholder="e.g. Kamini"
+                            className="border rounded-2xl p-4 text-base"
+                            style={{ backgroundColor: colors.background, borderColor: colors.primary, color: colors.text }}
+                        />
+                    </View>
+
+                    {/* Land Section - High z-index for dropdown */}
+                    <View className="mb-5 z-30">
+                        <Text className="font-bold text-base ml-1 mb-2" style={{ color: colors.primary }}>Land (Source)</Text>
+                        <AutocompleteInput
+                            data={landSuggestions}
+                            value={land}
+                            onChangeText={setLand}
+                            placeholder="e.g. Farm A"
                             className="border rounded-2xl p-4 text-base"
                             style={{ backgroundColor: colors.background, borderColor: colors.primary, color: colors.text }}
                         />

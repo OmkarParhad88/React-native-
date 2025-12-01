@@ -1,5 +1,5 @@
 import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
-import { deleteAllData, deleteItem as deleteItemDB, getItems, getUniqueItems, getUniqueSellers, initDB, insertItem, updateItem as updateItemDB } from '../Services/Database';
+import { deleteAllData, deleteItem as deleteItemDB, getItems, getUniqueItems, getUniqueLands, getUniqueSellers, initDB, insertItem, updateItem as updateItemDB } from '../Services/Database';
 
 export interface Item {
   id: string;
@@ -12,6 +12,7 @@ export interface Item {
   subtotal: string;
   expenseTotal: string;
   total: string;
+  land?: string;
 }
 
 interface ItemsContextType {
@@ -23,6 +24,7 @@ interface ItemsContextType {
   refreshItems: () => void;
   sellerSuggestions: string[];
   itemSuggestions: string[];
+  landSuggestions: string[];
 }
 
 const ItemsContext = createContext<ItemsContextType | undefined>(undefined);
@@ -31,10 +33,12 @@ export const ItemsProvider = ({ children }: { children: ReactNode }) => {
   const [items, setItems] = useState<Item[]>([]);
   const [sellerSuggestions, setSellerSuggestions] = useState<string[]>([]);
   const [itemSuggestions, setItemSuggestions] = useState<string[]>([]);
+  const [landSuggestions, setLandSuggestions] = useState<string[]>([]);
 
   const refreshSuggestions = () => {
     setSellerSuggestions(getUniqueSellers());
     setItemSuggestions(getUniqueItems());
+    setLandSuggestions(getUniqueLands());
   };
 
   const refreshItems = () => {
@@ -73,7 +77,7 @@ export const ItemsProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <ItemsContext.Provider value={{ items, addItem, updateItem, deleteItem, deleteAllItems, refreshItems, sellerSuggestions, itemSuggestions }}>
+    <ItemsContext.Provider value={{ items, addItem, updateItem, deleteItem, deleteAllItems, refreshItems, sellerSuggestions, itemSuggestions, landSuggestions }}>
       {children}
     </ItemsContext.Provider>
   );

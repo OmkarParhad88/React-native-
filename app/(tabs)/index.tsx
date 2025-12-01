@@ -36,6 +36,19 @@ export default function Index() {
     }, { dag: 0, qty: 0, total: 0 });
   }, [filteredItems]);
 
+  // Calculate Land Stats
+  const landStats = useMemo(() => {
+    const stats: { [key: string]: number } = {};
+    filteredItems.forEach(item => {
+      const land = item.land;
+      if (land) {
+        stats[land] = (stats[land] || 0) + (parseFloat(item.dag) || 0);
+      }
+    });
+    return Object.entries(stats).sort((a, b) => b[1] - a[1]); // Sort by Dag count descending
+  }, [filteredItems]);
+
+
   const formatDate = (date: Date) => {
     if (filterType === 'year') {
       return date.toLocaleDateString('default', { year: 'numeric' });
@@ -127,6 +140,21 @@ export default function Index() {
           <Text className="text-4xl font-extrabold" style={{ color: colors.primary }}>₹{stats.total.toFixed(2)}</Text>
         </View>
 
+        {/* Land Overview */}
+        {landStats.length > 0 && (
+          <View className="mb-8">
+            <Text className="text-xl font-bold mb-4" style={{ color: colors.text }}>Land Overview (Dag)</Text>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              {landStats.map(([land, dag]) => (
+                <View key={land} className="p-4 rounded-xl mr-3 shadow-sm min-w-[120px]" style={{ backgroundColor: colors.card }}>
+                  <Text className="text-gray-500 font-medium mb-1">{land}</Text>
+                  <Text className="text-2xl font-bold" style={{ color: colors.primary }}>{dag}</Text>
+                </View>
+              ))}
+            </ScrollView>
+          </View>
+        )}
+
         {/* Recent Items List (Filtered) */}
         <Text className="text-xl font-bold mb-4" style={{ color: colors.text }}>
           Transactions ({filteredItems.length})
@@ -142,6 +170,7 @@ export default function Index() {
                 <Text className="text-gray-500">{item.date}</Text>
               </View>
               <Text style={{ color: colors.text }} className="mb-2">{item.item}</Text>
+              {item.land ? <Text className="text-gray-400 text-xs mb-2">Land: {item.land}</Text> : null}
               <View className="flex-row justify-between border-t border-gray-100 pt-2">
                 <Text className="text-gray-600">Qty: {item.qty}</Text>
                 <Text className="font-bold" style={{ color: colors.primary }}>₹{item.total}</Text>

@@ -16,9 +16,18 @@ export const initDB = () => {
         price TEXT,
         subtotal TEXT,
         expenseTotal TEXT,
-        total TEXT
+        total TEXT,
+        land TEXT
       );
     `);
+
+    // Migration to add land column if it doesn't exist (for existing installs)
+    try {
+      db.execSync('ALTER TABLE items ADD COLUMN land TEXT;');
+    } catch (e) {
+      // Ignore error if column already exists
+    }
+
   } catch (error) {
     console.error("Error initializing database:", error);
   }
@@ -31,7 +40,7 @@ export const getItems = (): Item[] => {
 
 export const insertItem = (item: Item) => {
   db.runSync(
-    `INSERT INTO items (id, seller, item, date, dag, qty, price, subtotal, expenseTotal, total) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    `INSERT INTO items (id, seller, item, date, dag, qty, price, subtotal, expenseTotal, total, land) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     [
       item.id,
       item.seller,
@@ -43,6 +52,7 @@ export const insertItem = (item: Item) => {
       item.subtotal,
       item.expenseTotal,
       item.total,
+      item.land || ""
     ]
   );
 };
@@ -50,7 +60,7 @@ export const insertItem = (item: Item) => {
 export const updateItem = (item: Item) => {
   try {
     db.runSync(
-      `UPDATE items SET seller = ?, item = ?, date = ?, dag = ?, qty = ?, price = ?, subtotal = ?, expenseTotal = ?, total = ? WHERE id = ?`,
+      `UPDATE items SET seller = ?, item = ?, date = ?, dag = ?, qty = ?, price = ?, subtotal = ?, expenseTotal = ?, total = ?, land = ? WHERE id = ?`,
       [
         item.seller,
         item.item,
@@ -61,6 +71,7 @@ export const updateItem = (item: Item) => {
         item.subtotal,
         item.expenseTotal,
         item.total,
+        item.land || "",
         item.id
       ]
     );
@@ -93,6 +104,16 @@ export const getUniqueItems = (): string[] => {
     return result ? result.map((row: any) => row.item) : [];
   } catch (error) {
     console.error("Error fetching unique items:", error);
+    return [];
+  }
+};
+
+export const getUniqueLands = (): string[] => {
+  try {
+    const result = db.getAllSync('SELECT DISTINCT land FROM items WHERE land IS NOT NULL AND land != ""');
+    return result ? result.map((row: any) => row.land) : [];
+  } catch (error) {
+    console.error("Error fetching unique lands:", error);
     return [];
   }
 };
