@@ -60,30 +60,6 @@ const New = () => {
         }, [id, params])
     );
 
-    // Clear params when navigating away (blur)
-    useEffect(() => {
-        const unsubscribe = navigation.addListener('blur', () => {
-            // Use setParams to clear the navigation state
-            // We use setTimeout to ensure this happens after the transition
-            setTimeout(() => {
-                navigation.setParams({
-                    id: undefined,
-                    seller: undefined,
-                    item: undefined,
-                    date: undefined,
-                    dag: undefined,
-                    qty: undefined,
-                    price: undefined,
-                    subtotal: undefined,
-                    expenseTotal: undefined,
-                    total: undefined,
-                    land: undefined
-                });
-            }, 100);
-        });
-        return unsubscribe;
-    }, [navigation]);
-
     // Auto-calc subtotal
     useEffect(() => {
         const q = Number(qty);
