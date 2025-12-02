@@ -256,7 +256,7 @@ const New = () => {
 
                         <View className="flex-row justify-between items-center mt-1">
                             <Text className="font-bold text-lg" style={{ color: colors.primary }}>Total</Text>
-                            <Text className="font-extrabold text-2xl" style={{ color: colors.primary }}>₹{total || '0'}</Text>
+                            <Text className="font-extrabold text-2xl" style={{ color: "red" }}>₹{total || '0'}</Text>
                         </View>
                     </View>
 

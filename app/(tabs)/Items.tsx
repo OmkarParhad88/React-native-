@@ -331,7 +331,7 @@ export default function Items() {
         paddingBottom: 10
       }}>
         <View className="flex-row justify-between items-center mt-10 mb-5">
-          <Text className="text-5xl font-bold" style={{ color: colors.primary }}>Pravin Parhad</Text>
+          <Text className="text-4xl font-bold" style={{ color: colors.primary }}>Pravin B Parhad</Text>
           <TouchableOpacity onPress={() => setModalVisible(true)} className="p-3 rounded-lg" style={{ backgroundColor: colors.primary }}>
             <Text className="text-white font-bold">Month Report</Text>
           </TouchableOpacity>

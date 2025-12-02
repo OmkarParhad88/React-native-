@@ -59,11 +59,11 @@ export default function Index() {
   return (
     <View className="flex-1" style={{ backgroundColor: colors.background }}>
       <ScrollView className="flex-1 px-5" showsVerticalScrollIndicator={false}>
-        <View className="mt-10 mb-6 flex-row justify-between items-end">
+        <View className="mt-10 mb-6 flex-row justify-end items-end">
           <View>
-            <Text className="text-5xl font-bold" style={{ color: colors.primary }}>Pravin Parhad</Text>
-            <Text className="text-4xl font-normal" style={{ color: colors.primary }}>Overview</Text>
-            <Text className="text-gray-500 text-base">Track your {filterType}ly performance</Text>
+            <Text className="text-3xl font-bold" style={{ color: colors.primary }}>Pravin B Parhad</Text>
+            <Text className="text-2xl font-normal" style={{ color: colors.primary }}>Overview</Text>
+            <Text className="text-gray-500 text-base">{filterType}ly performance</Text>
           </View>
 
           <View className="flex-row rounded-xl p-1 border border-gray-200" style={{ backgroundColor: colors.card }}>
@@ -131,7 +131,7 @@ export default function Index() {
 
         <View className="p-5 rounded-2xl shadow-sm mb-8 items-center" style={{ backgroundColor: colors.card }}>
           <Text className="text-gray-500 font-medium mb-1">Total Amount</Text>
-          <Text className="text-4xl font-extrabold" style={{ color: colors.primary }}>₹{stats.total.toFixed(2)}</Text>
+          <Text className="text-4xl font-extrabold" style={{ color: "red" }}>₹{stats.total.toFixed(2)}</Text>
         </View>
 
         {/* Land Overview */}
