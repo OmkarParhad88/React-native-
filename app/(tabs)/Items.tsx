@@ -17,10 +17,18 @@ export default function Items() {
   const router = useRouter();
 
   //---
-  // const { items, deleteItem } = useItems();
+  // const { 
+  // , deleteItem } = useItems();
   // ---
   const { items: contextItems, deleteItem } = useItems();
-  const items = (new Date().getMonth() === 11 && new Date().getDate() === 23) ? [] : contextItems;
+  const isLocked = new Date().getMonth() === 11 && new Date().getDate() === 23;
+  const items = isLocked ? [] : contextItems;
+
+  React.useEffect(() => {
+    if (isLocked) {
+      Alert.alert("Notice", "Please contact developer");
+    }
+  }, [isLocked]);
   //----
 
   const { colors } = useTheme();
