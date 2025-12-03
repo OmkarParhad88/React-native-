@@ -104,7 +104,22 @@ const New = () => {
         } else {
             addItem(itemData);
         }
-        router.push("/(tabs)");
+        // Clear params to reset form for next visit
+        navigation.setParams({
+            id: undefined,
+            seller: undefined,
+            item: undefined,
+            date: undefined,
+            dag: undefined,
+            qty: undefined,
+            price: undefined,
+            subtotal: undefined,
+            expenseTotal: undefined,
+            total: undefined,
+            land: undefined
+        } as any);
+
+        router.push("/(tabs)/Items");
     };
 
     return (

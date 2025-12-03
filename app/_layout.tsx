@@ -17,13 +17,7 @@ const AppContent = () => {
                         options={{
                             headerShown: false,
                         }}
-                    /><Stack.Screen
-                        name="Item/[id]"
-                        options={{
-                            headerShown: false,
-                        }}
                     />
-
                 </Stack>
             </View>
         </SafeAreaView>

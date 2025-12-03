@@ -2,6 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import React, { useMemo, useState } from "react";
 import { Modal, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import DateFilterModal from "../../Components/DateFilterModal";
+import { PROVIDER_NAME } from "../../Constants/Config";
 import { useItems } from "../../Context/ItemsContext";
 import { useTheme } from "../../Context/ThemeContext";
 
@@ -59,9 +60,9 @@ export default function Index() {
   return (
     <View className="flex-1" style={{ backgroundColor: colors.background }}>
       <ScrollView className="flex-1 px-5" showsVerticalScrollIndicator={false}>
-        <View className="mt-10 mb-6 flex-row justify-end items-end">
+        <View className="mt-10 mb-6 flex-row justify-between items-end">
           <View>
-            <Text className="text-3xl font-bold" style={{ color: colors.primary }}>Pravin B Parhad</Text>
+            <Text className="text-3xl font-bold" style={{ color: colors.primary }}>{PROVIDER_NAME}</Text>
             <Text className="text-2xl font-normal" style={{ color: colors.primary }}>Overview</Text>
             <Text className="text-gray-500 text-base">{filterType}ly performance</Text>
           </View>

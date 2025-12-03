@@ -9,6 +9,7 @@ import { shareAsync } from 'expo-sharing';
 import React from 'react';
 import { Alert, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
 import DateFilterModal from "../../Components/DateFilterModal";
+import { PROVIDER_ADDRESS, PROVIDER_EMAIL, PROVIDER_NAME, PROVIDER_PHONE } from "../../Constants/Config";
 import { useItems } from "../../Context/ItemsContext";
 import { useTheme } from "../../Context/ThemeContext";
 
@@ -17,8 +18,7 @@ export default function Items() {
   const router = useRouter();
 
   //---
-  // const { 
-  // , deleteItem } = useItems();
+  // const { items, deleteItem } = useItems();
   // ---
   const { items: contextItems, deleteItem } = useItems();
   const isLocked = new Date().getMonth() === 11 && new Date().getDate() === 23;
@@ -100,10 +100,10 @@ export default function Items() {
         </head>
         <body>
           <div class="provider-header">
-            <div class="provider-name"><span class="provider-label">Provider :</span> Pravin <span>Parhad</span></div>
-            <div class="info-line"><span >Address :</span> kendur , parhadwadi</div>
-            <div class="info-line"><span >Email :</span> pravinparhad6@gmail.com</div>
-            <div class="info-line"><span >Phone :</span> 99303 58070</div>
+            <div class="provider-name"><span class="provider-label">Provider :</span> ${PROVIDER_NAME}</div>
+            <div class="info-line"><span >Address :</span> ${PROVIDER_ADDRESS}</div>
+            <div class="info-line"><span >Email :</span> ${PROVIDER_EMAIL}</div>
+            <div class="info-line"><span >Phone :</span> ${PROVIDER_PHONE}</div>
           </div>
 
           <div class="seller-section">
@@ -296,10 +296,10 @@ export default function Items() {
         </head>
         <body>
           <div class="provider-header">
-            <div class="provider-name"><span class="provider-label">Provider :</span> Pravin <span>Parhad</span></div>
-            <div class="info-line"><span >Address :</span> kendur , parhadwadi</div>
-            <div class="info-line"><span >Email :</span> pravinparhad6@gmail.com</div>
-            <div class="info-line"><span >Phone :</span> 99303 58070</div>
+            <div class="provider-name"><span class="provider-label">Provider :</span> ${PROVIDER_NAME}</div>
+            <div class="info-line"><span >Address :</span> ${PROVIDER_ADDRESS}</div>
+            <div class="info-line"><span >Email :</span> ${PROVIDER_EMAIL}</div>
+            <div class="info-line"><span >Phone :</span> ${PROVIDER_PHONE}</div>
           </div>
           ${sellersHtml}
         </body>
@@ -339,7 +339,7 @@ export default function Items() {
         paddingBottom: 10
       }}>
         <View className="flex-row justify-between items-center mt-10 mb-5">
-          <Text className="text-4xl font-bold" style={{ color: colors.primary }}>Pravin B Parhad</Text>
+          <Text className="text-4xl font-bold" style={{ color: colors.primary }}>{PROVIDER_NAME}</Text>
           <TouchableOpacity onPress={() => setModalVisible(true)} className="p-3 rounded-lg" style={{ backgroundColor: colors.primary }}>
             <Text className="text-white font-bold">Month Report</Text>
           </TouchableOpacity>
@@ -401,8 +401,12 @@ export default function Items() {
               <Text style={{ color: colors.text }}>{item.item}</Text>
               <View className="flex-row justify-between mt-1 items-center">
                 <View>
-                  <Text className="" style={{ color: colors.text }}>Qty: {item.qty}</Text>
-                  <Text className="font-bold text-lg" style={{ color: colors.primary }}>Total: {item.total}</Text>
+                  <View className="flex-row justify-between mt-1 items-center">
+                    <Text className="" style={{ color: colors.primary }}>Dag: {item.dag}</Text>
+                    <Text className="ml-1" style={{ color: colors.text }}>Qty: {item.qty}</Text>
+
+                  </View>
+                  <Text className="font-bold text-xl" style={{ color: colors.primary }}>Total: {item.total}</Text>
                 </View>
                 <View className="flex-row">
                   <TouchableOpacity onPress={() => generatePdf(item)} className="bg-indigo-50 p-2 rounded-full border border-indigo-100 mr-3">
