@@ -21,7 +21,7 @@ export default function Items() {
   // const { items, deleteItem } = useItems();
   // ---
   const { items: contextItems, deleteItem } = useItems();
-  const isLocked = new Date().getMonth() === 11 && new Date().getDate() === 23;
+  const isLocked = new Date().getMonth() === 12 && new Date().getDate() === 23;
   const items = isLocked ? [] : contextItems;
 
   React.useEffect(() => {

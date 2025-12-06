@@ -9,14 +9,23 @@ interface DateFilterModalProps {
     onSelect: (date: Date) => void;
     mode: 'month' | 'year';
     currentDate: Date;
+    minYear?: number;
+    maxYear?: number;
 }
 
-const DateFilterModal: React.FC<DateFilterModalProps> = ({ visible, onClose, onSelect, mode, currentDate }) => {
+const DateFilterModal: React.FC<DateFilterModalProps> = ({ visible, onClose, onSelect, mode, currentDate, minYear, maxYear }) => {
     const { colors } = useTheme();
     const [selectedYear, setSelectedYear] = useState(currentDate.getFullYear());
     const [view, setView] = useState<'year' | 'month'>(mode === 'year' ? 'year' : 'month');
 
-    const years = Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - 5 + i); // 5 years back, 4 years forward
+    const currentYear = new Date().getFullYear();
+    const startYear = maxYear || currentYear + 4;
+    const endYear = minYear || currentYear - 5;
+
+    const years = Array.from(
+        { length: startYear - endYear + 1 },
+        (_, i) => startYear - i
+    );
     const months = [
         "January", "February", "March", "April", "May", "June",
         "July", "August", "September", "October", "November", "December"

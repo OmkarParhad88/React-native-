@@ -116,6 +116,8 @@ export default function Index() {
           onSelect={setDate}
           mode={filterType}
           currentDate={date}
+          minYear={items.length > 0 ? Math.min(...items.map(i => new Date(i.date).getFullYear())) : new Date().getFullYear()}
+          maxYear={new Date().getFullYear()}
         />
 
         {/* Stats Cards */}
