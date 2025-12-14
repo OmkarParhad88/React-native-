@@ -1,10 +1,40 @@
 import { Ionicons } from "@expo/vector-icons";
-import React, { useMemo, useState } from "react";
-import { Modal, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import React, { useMemo, useRef, useState } from "react";
+import { Modal, Pressable, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import DateFilterModal from "../../Components/DateFilterModal";
 import { PROVIDER_NAME } from "../../Constants/Config";
 import { useItems } from "../../Context/ItemsContext";
 import { useTheme } from "../../Context/ThemeContext";
+
+const formatCurrency = (amount: number) => {
+  return amount.toLocaleString('en-IN', {
+    maximumFractionDigits: 2,
+    minimumFractionDigits: 2
+  });
+};
+
+const LandCard = ({ land, dag, total, colors }: { land: string, dag: number, total: number, colors: any }) => {
+  const [isVisible, setIsVisible] = useState(false);
+  const lastPress = useRef(0);
+
+  const handlePress = () => {
+    const now = Date.now();
+    if (now - lastPress.current < 300) {
+      setIsVisible((prev) => !prev);
+    }
+    lastPress.current = now;
+  };
+
+  return (
+    <Pressable onPress={handlePress} className="p-4 rounded-xl mr-3 shadow-sm min-w-[120px]" style={{ backgroundColor: colors.card }}>
+      <Text className="text-gray-500 font-medium mb-1">{land}</Text>
+      <Text className="text-2xl font-bold" style={{ color: colors.primary }}>{dag}</Text>
+      <Text className="text-lg font-semibold mt-1" style={{ color: "green" }}>
+        {!isVisible ? "******" : `₹${formatCurrency(total)}`}
+      </Text>
+    </Pressable>
+  );
+};
 
 export default function Index() {
   const { items, sellerSuggestions } = useItems();
@@ -15,6 +45,16 @@ export default function Index() {
   const [selectedSeller, setSelectedSeller] = useState<string | null>(null);
   const [showSellerModal, setShowSellerModal] = useState(false);
   const [filterType, setFilterType] = useState<'month' | 'year'>('month');
+  const [isTotalVisible, setIsTotalVisible] = useState(false);
+  const lastPress = useRef(0);
+
+  const handleTotalPress = () => {
+    const now = Date.now();
+    if (now - lastPress.current < 300) {
+      setIsTotalVisible((prev) => !prev);
+    }
+    lastPress.current = now;
+  };
 
   // Filter items
   const filteredItems = useMemo(() => {
@@ -39,14 +79,18 @@ export default function Index() {
 
   // Calculate Land Stats
   const landStats = useMemo(() => {
-    const stats: { [key: string]: number } = {};
+    const stats: { [key: string]: { dag: number; total: number } } = {};
     filteredItems.forEach(item => {
       const land = item.land;
       if (land) {
-        stats[land] = (stats[land] || 0) + (parseFloat(item.dag) || 0);
+        if (!stats[land]) {
+          stats[land] = { dag: 0, total: 0 };
+        }
+        stats[land].dag += parseFloat(item.dag) || 0;
+        stats[land].total += parseFloat(item.total) || 0;
       }
     });
-    return Object.entries(stats).sort((a, b) => b[1] - a[1]); // Sort by Dag count descending
+    return Object.entries(stats).sort((a, b) => b[1].dag - a[1].dag); // Sort by Dag count descending
   }, [filteredItems]);
 
 
@@ -132,21 +176,23 @@ export default function Index() {
           </View>
         </View>
 
-        <View className="p-5 rounded-2xl shadow-sm mb-8 items-center" style={{ backgroundColor: colors.card }}>
+        <Pressable onPress={handleTotalPress} className="p-5 rounded-2xl shadow-sm mb-8 items-center" style={{ backgroundColor: colors.card }}>
           <Text className="text-gray-500 font-medium mb-1">Total Amount</Text>
-          <Text className="text-4xl font-extrabold" style={{ color: "red" }}>₹{stats.total.toFixed(2)}</Text>
-        </View>
+          <Text
+            className="text-4xl font-extrabold"
+            style={{ color: "red" }}
+          >
+            {!isTotalVisible ? "******" : `₹${formatCurrency(stats.total)}`}
+          </Text>
+        </Pressable>
 
         {/* Land Overview */}
         {landStats.length > 0 && (
           <View className="mb-8">
             <Text className="text-xl font-bold mb-4" style={{ color: colors.text }}>Land Overview (Dag)</Text>
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              {landStats.map(([land, dag]) => (
-                <View key={land} className="p-4 rounded-xl mr-3 shadow-sm min-w-[120px]" style={{ backgroundColor: colors.card }}>
-                  <Text className="text-gray-500 font-medium mb-1">{land}</Text>
-                  <Text className="text-2xl font-bold" style={{ color: colors.primary }}>{dag}</Text>
-                </View>
+              {landStats.map(([land, { dag, total }]) => (
+                <LandCard key={land} land={land} dag={dag} total={total} colors={colors} />
               ))}
             </ScrollView>
           </View>

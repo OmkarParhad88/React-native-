@@ -85,14 +85,14 @@ export default function Items() {
             body { font-family: Helvetica, Arial, sans-serif; padding: 20px; }
             .provider-header { margin-bottom: 30px; }
             .provider-name { font-size: 30px; font-weight: bold; color: #ff0000ff; margin-bottom: 5px; }
-            .provider-label {  }
+            .provider-label { font-weight: bold;   }
             .info-line { margin: 5px 0; font-size: 26px; }
             .seller-section { margin-top: 30px; margin-bottom: 40px; page-break-inside: avoid; }
             .seller-name { font-size: 24px; font-weight: bold; color: #0099ffff; margin-bottom: 10px; }
-            .seller-label { }
+            .seller-label { font-weight: bold;  }
             table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-            th { background-color: #22e650ff; color: black; padding: 8px; text-align: center; border: 1px solid #000; font-size: 14px; }
-            td { padding: 8px; text-align: center; border: 1px solid #000; background-color: #f0f0f0ff; font-size: 14px; }
+            th { background-color: #22e650ff; color: black; padding: 4px; text-align: center; border: 1px solid #000; font-size: 14px; }
+            td { padding: 4px; text-align: center; border: 1px solid #000; background-color: #f0f0f0ff; font-size: 14px; }
             .total-row td { font-weight: bold; }
             .total-label { text-align: left; padding-left: 10px; color: black; background-color: #e6e6e6ff; font-weight: bold; }
             td:last-child { color: red; font-weight: bold; }
@@ -243,7 +243,7 @@ export default function Items() {
                 <th>Price per Unit</th>
                 <th>Subtotal</th>
                 <th>Expenses</th>
-                <th>Total</th>
+                <th style=" font-weight: bold; font-size: 20px;">Total</th>
               </tr>
             </thead>
             <tbody>
@@ -252,7 +252,7 @@ export default function Items() {
                 <td colspan="2" class="total-label" style="text-align: left;">Total :</td>
                 <td style="color: red;">${totalDag}</td>
                 <td style="color: red;">${totalQty}</td>
-                <td style="color: red;"> Avg - ${averagePrice}</td>
+                <td style="color: red;"> Avg - ${Math.round(averagePrice)}</td>
                 <td style="color: red;">${totalSubtotal}</td>
                 <td style="color: red;">${totalExpenseTotal}</td>
                 <td style=" font-weight: bold; font-size: 20px;">${grandTotal}</td>
@@ -280,15 +280,15 @@ export default function Items() {
           <style>
             body { font-family: Helvetica, Arial, sans-serif; padding: 20px; }
             .provider-header { margin-bottom: 20px; }
-            .provider-name { font-size: 40px; font-weight: bold; color: #ff0000ff; margin-bottom: 5px; }
+            .provider-name { font-size: 28px; font-weight: bold; color: #ff0000ff; margin-bottom: 5px; }
             .provider-label {  }
-            .info-line { margin: 5px 0; font-size: 26px; }
+            .info-line { margin: 5px 0; font-size: 16px; }
             .seller-section { margin-top: 30px; margin-bottom: 40px; page-break-inside: avoid; }
-            .seller-name { font-size: 34px; font-weight: bold; color: #0099ffff; margin-bottom: 10px; }
+            .seller-name { font-size: 22px; font-weight: bold; color: #0099ffff; margin-bottom: 10px; }
             .seller-label {font-weight: bold; }
             table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-            th { background-color: #22e650ff; color: black; padding: 8px; text-align: center; border: 1px solid #000; font-size: 12px; }
-            td { padding: 8px; text-align: center; border: 1px solid #000; background-color: #f0f0f0ff; font-size: 12px; }
+            th { background-color: #22e650ff; color: black; padding: 4px; text-align: center; border: 1px solid #000; font-size: 14px; }
+            td { padding: 4px; text-align: center; border: 1px solid #000; background-color: #f0f0f0ff; font-size: 14px; }
             .total-row td { font-weight: bold; }
             .total-label { text-align: left; padding-left: 10px; color: black; background-color: #c0c0c0ff; }
             td:last-child { color: red; font-weight: bold; }
