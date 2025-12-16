@@ -105,6 +105,7 @@ const Settings = () => {
             subtotal: row.subtotal ? String(row.subtotal) : "0",
             expenseTotal: row.expenseTotal ? String(row.expenseTotal) : "0",
             total: row.total ? String(row.total) : "0",
+            land: row.land ? String(row.land) : "",
           };
           insertItem(newItem);
           importedCount++;
